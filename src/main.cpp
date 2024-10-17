@@ -24,7 +24,7 @@ int B_LED = 9;
 // int TOF_Sensor = 10;
 int touchSensor = 10;
 int servoClaw = 11;
-// int servoLift = 12;
+int servoLift = 12;
 
 // Create the motor shield object with the default I2C address
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
@@ -34,7 +34,7 @@ Adafruit_DCMotor *MotorRight = AFMS.getMotor(1);
 Adafruit_DCMotor *MotorLeft= AFMS.getMotor(2);
 
 // Defines
-#define SAMPLE_RATE 10  // in Hz
+#define SAMPLE_RATE 10  // in Hz, for IMU
 // Constructors
 Madgwick filter;  // Madgwick algorithm for roll, pitch, and yaw calculations
 
@@ -42,6 +42,7 @@ Madgwick filter;  // Madgwick algorithm for roll, pitch, and yaw calculations
 void HandlingLED();
 void PickUpBox();
 void followLine();
+void getYawAngle();
 
 
 void setup() {
@@ -51,10 +52,16 @@ void setup() {
   pinMode(R_FrontLine, INPUT);
   pinMode(L_BackLine, INPUT);
   pinMode(R_BackLine, INPUT);
+  pinMode(magSensor, INPUT);
   pinMode(R_LED, OUTPUT);          // sets the digital pin 7 as output (Red LED)
   pinMode(G_LED, OUTPUT);          // sets the digital pin 8 as output (Green LED)
   pinMode(B_LED, OUTPUT);          // sets the digital pin 9 as output (Blue LED)
+  pinMode(touchSensor, INPUT);
+  pinMode(servoClaw, OUTPUT);
+  pinMode(servoLift, OUTPUT);
 
+
+  // IMU stuff
   while (!Serial);  // wait for serial initialization
     Serial.print("LSM6DS3 IMU initialization ");
     if (IMU.begin()) {  // initialize IMU
