@@ -1,131 +1,148 @@
-// Imported Libraries
-
 #include <Arduino.h>
 #include <Adafruit_MotorShield.h>
-#include <Arduino_LSM6DS3.h> // Accesses IMU
-#include <MadgwickAHRS.h>    // Calculates yaw angle from IMU
-#include "DFRobot_VL53L0X.h" // TOF distance sensor
+#include <Arduino_LSM6DS3.h>
+#include <MadgwickAHRS.h>
 
-// Pin Assignment
-
-#define L_Back_LineSensor 2
-#define R_Back_LineSensor 3
-#define L_Front_LineSensor 4
-#define R_Front_LineSensor 5
-#define magSensor 6
-#define R_LED 7
-#define G_LED 8
-#define B_LED 9
-#define touchSensor 10
-#define servoClaw 11
-#define servoLift 12
-
-#define SAMPLE_RATE_IMU 10  // in Hz, sample rate of IMU
+#include "m101_hardware_config.h"
+#include "DFRobot_VL53L0X.h"
 
 
-// Global Variable Assignment
+// ------------------------------- IMU ------------------------------- //
 
-bool Contaminated = false;
-bool CarryingBox = false;
+void Imu_Setup()
+{
+  Madgwick madgwickFilter;
 
-// Create the motor shield object with the default I2C address
-Adafruit_MotorShield adaFruitMotorShield = Adafruit_MotorShield();
-//Motor at M1, right motor
-Adafruit_DCMotor *MotorRight = adaFruitMotorShield.getMotor(1);
-// Motor at M2, left motor
-Adafruit_DCMotor *MotorLeft= adaFruitMotorShield.getMotor(2);
+  Serial.print("LSM6DS3 IMU initialization ");
 
-// Function Assignment
-void Task_LedStatusUpdate();
+  if (!IMU.begin())
+  {
+    Serial.println("FAILED.");
+    IMU.end();
 
-
-void setup() {
-  // Initialisation
-  Serial.begin(9600);
-  pinMode(L_Front_LineSensor, INPUT);
-  pinMode(R_Front_LineSensor, INPUT);
-  pinMode(L_Back_LineSensor, INPUT);
-  pinMode(R_Back_LineSensor, INPUT);
-  pinMode(magSensor, INPUT);
-  pinMode(R_LED, OUTPUT);
-  pinMode(G_LED, OUTPUT);
-  pinMode(B_LED, OUTPUT);
-  pinMode(touchSensor, OUTPUT);
-  pinMode(servoClaw, OUTPUT);
-  pinMode(servoLift, OUTPUT);
-
-// IMU initialisation
-  // Constructors
-  Madgwick filter;  // Madgwick algorithm for roll, pitch, and yaw calculations
-  while (!Serial);  // wait for serial initialization
-      Serial.print("LSM6DS3 IMU initialization ");
-      if (IMU.begin()) {  // initialize IMU
-          Serial.println("completed successfully.");
-      } else {
-          Serial.println("FAILED.");
-          IMU.end();
-          while (1);
-      }
-      Serial.println();
-      filter.begin(SAMPLE_RATE_IMU);  // initialize Madgwick filter
-
-}
-
-void loop(){
-  Task_LedStatusUpdate();
-}
-
-
-void followLine(){ 
-  int valLeft = digitalRead(L_Back_LineSensor);  // read left input value 
-
-  int valRight = digitalRead(R_Back_LineSensor);  // read right input value 
-  //accelerate and deccelerate motors
-
-  MotorRight->run(FORWARD);
-  MotorLeft->run(FORWARD);
-  if (valLeft == LOW) {
-    MotorRight->setSpeed(100);
+    while(true){} // Kill the whole program
   }
-  else if (valLeft == HIGH){
-    MotorRight->setSpeed(150);
-  }
-  if(valRight == LOW){
-    MotorLeft->setSpeed(100);
-  }
-  else if(valRight == HIGH){
-    MotorLeft->setSpeed(150);
- 
-}
+
+  Serial.println("completed successfully.");
+  Serial.println();
+
+  madgwickFilter.begin(SAMPLE_RATE_IMU_HZ);
 }
 
-void getYawAngle() {
-  char buffer[5];    // string buffer for use with dtostrf() function
-   float ax, ay, az;  // accelerometer values
-   float gx, gy, gz;  // gyroscope values
-   if (IMU.accelerationAvailable() && IMU.gyroscopeAvailable()
-      && IMU.readAcceleration(ax, ay, az) && IMU.readGyroscope(gx, gy, gz)) {
-      filter.updateIMU(gx, gy, gz, ax, ay, az);  // update roll, pitch, and yaw values
-      // Print rotation angles
-      Serial.print("Yaw = ");  Serial.print(dtostrf(filter.getYaw(), 4, 0, buffer)); Serial.println(" °");
-   }
-}
-
-void Task_LedStatusUpdate(){
-  if (CarryingBox){
-    if (Contaminated){
-      SetLed(R_LED, 1);       // sets the Red LED on
-      SetLed(G_LED, 0);       // sets the Green LED on
-    } else {
-      SetLed(R_LED, 0);         // sets Red LED off
-      SetLed(G_LED, 1);        // sets Green LED on
-    }
-  } else {
-    SetLed(R_LED, 0);           // sets Red LED off
-    SetLed(G_LED, 0);           // sets Green LED off
+void Imu_GetYawAngle()
+{
+  char buffer[5];
+  float ax, ay, az;
+  float gx, gy, gz;
+  if (!IMU.accelerationAvailable() ||
+      !IMU.gyroscopeAvailable() ||
+      !IMU.readAcceleration(ax, ay, az) ||
+      !IMU.readGyroscope(gx, gy, gz))
+  {
+    return;
   }
+
+  filter.updateIMU(gx, gy, gz, ax, ay, az);
+  Serial.print("Yaw = ");  Serial.print(dtostrf(filter.getYaw(), 4, 0, buffer)); Serial.println(" °");
 }
 
-void SetLed(int LedPin, bool TurnedOn){
+// ------------------------------- LEDs ------------------------------- //
+
+void Led_Setup()
+{
+  pinMode(PIN_CONTAMINATION_LED, OUTPUT);
+  pinMode(PIN_NO_CONTAMINATION_LED, OUTPUT);
+  pinMode(PIN_DRIVING_STATUS_LED, OUTPUT);
+}
+
+void Led_Set(int LedPin, bool TurnedOn)
+{
   digitalWrite(LedPin, TurnedOn);
+}
+
+void Led_UpdateStatus()
+{
+  bool carryingBox = ???;
+  bool contaminated = ???;
+
+  Led_Set(PIN_CONTAMINATION_LED, carryingBox && contaminated);
+  Led_Set(PIN_NO_CONTAMINATION_LED, carryingBox && !contaminated);
+}
+
+// ------------------------------- MOTORS ------------------------------- //
+
+// NEEDS TO BE MOVED TO A CLASS AND STORED NON-GLOBALLY
+Adafruit_MotorShield AdafruitMotorShield = Adafruit_MotorShield();
+
+Adafruit_DCMotor* Motors_GetMotor(int motor)
+{
+  return AdafruitMotorShield.getMotor(motor);
+}
+
+void Motors_Run(int motor, bool forward)
+{
+  Motors_GetMotor(motor)->run(forward);
+}
+
+void Motors_SetSpeed(int motor, int speed)
+{
+  Motors_GetMotor(motor)->setSpeed(speed);
+}
+
+// ------------------------------- LINE FOLLOWING ------------------------------- //
+
+void LineSensors_Setup()
+{
+  pinMode(PIN_LEFT_FRONT_LINE_SENSOR, INPUT);
+  pinMode(PIN_RIGHT_FRONT_LINE_SENSOR, INPUT);
+  pinMode(PIN_LEFT_BACK_LINE_SENSOR, INPUT);
+  pinMode(PIN_RIGHT_BACK_LINE_SENSOR, INPUT);
+}
+
+bool LineSensors_Read(int sensor)
+{
+  return digitalRead(sensor) == HIGH;
+}
+
+void FollowLine()
+{
+  const int fastSpeed = 150;
+  const int slowSpeed = 100;
+
+  int rightMotorSpeed = LineSensors_Read(PIN_LEFT_BACK_LINE_SENSOR) ? slowSpeed : fastSpeed;
+  Motors_SetSpeed(MOTOR_RIGHT, rightMotorSpeed);
+
+  int leftMotorSpeed = LineSensors_Read(PIN_RIGHT_BACK_LINE_SENSOR) ? slowSpeed : fastSpeed;
+  Motors_SetSpeed(MOTOR_LEFT, leftMotorSpeed);
+
+  Motors_Run(MOTOR_LEFT, forward=true);
+  Motors_Run(MOTOR_RIGHT, forward=true);
+}
+
+// ------------------------------- BOX LOADING ------------------------------- //
+
+void Claw_Setup()
+{
+  pinMode(PIN_MAGNETIC_SENSOR, INPUT);
+  pinMode(PIN_TOUCH_SENSOR, OUTPUT);
+  pinMode(PIN_SERVO_CLAW, OUTPUT);
+  pinMode(PIN_SERVO_LIFT, OUTPUT);
+}
+
+// ------------------------------- MAIN ------------------------------- //
+
+void setup()
+{
+  Serial.begin(9600);
+  while(!Serial){} // Wait for the serial to set up
+
+  Led_Setup();
+  LineSensors_Setup();
+  Claw_Setup();
+  Imu_Setup();
+}
+
+void loop()
+{
+  Led_UpdateStatus();
 }
