@@ -13,6 +13,7 @@ Madgwick madgwickFilter;
 
 void Imu_Setup()
 {
+  return;
   Serial.print("LSM6DS3 IMU initialization ");
 
   if (!IMU.begin())
@@ -31,6 +32,7 @@ void Imu_Setup()
 
 void Imu_GetYawAngle()
 {
+  return;
   char buffer[5];
   float ax, ay, az;
   float gx, gy, gz;
@@ -80,8 +82,8 @@ Adafruit_MotorShield AdafruitMotorShield = Adafruit_MotorShield();
 Adafruit_DCMotor* AdafruitMotorRight = AdafruitMotorShield.getMotor(MOTOR_RIGHT);
 Adafruit_DCMotor* AdafruitMotorLeft = AdafruitMotorShield.getMotor(MOTOR_LEFT);
 
-uint8_t rightMotorSpeed = 100;
-uint8_t leftMotorSpeed = 100;
+uint8_t rightMotorSpeed = 0;
+uint8_t leftMotorSpeed = 0;
 
 void Motors_Run(int motor, bool forward)
 {
@@ -112,6 +114,24 @@ void Motors_SetSpeed(int motor, int speed)
     AdafruitMotorRight->setSpeed(speed);
   }
 
+  Serial.println("Done!");
+}
+
+void Motors_Setup()
+{
+  Serial.print("Motors setup...");
+  if (!AdafruitMotorShield.begin())
+  {
+    Serial.println("Could not find Motor Shield. Check wiring.");
+    while(true){} // Kill the whole entire program
+  }
+  Serial.println("Done!");
+
+  Serial.print("Motors start...");
+  Motors_SetSpeed(MOTOR_RIGHT, 100);
+  Motors_SetSpeed(MOTOR_LEFT, 100);
+  Motors_Run(MOTOR_LEFT, true);
+  Motors_Run(MOTOR_RIGHT, true);
   Serial.println("Done!");
 }
 
@@ -174,6 +194,7 @@ void setup()
   LineSensors_Setup();
   Claw_Setup();
   Imu_Setup();
+  Motors_Setup();
   
   Serial.println("Initialised");
 }
@@ -183,9 +204,7 @@ void loop()
 {
   if (firstRun)
   {
-    Serial.println("Following line...");
-    Motors_SetSpeed(MOTOR_LEFT, leftMotorSpeed);
-    Motors_SetSpeed(MOTOR_RIGHT, rightMotorSpeed);
+    Serial.println("First loop...");
   }
 
   FollowLine();
@@ -193,7 +212,7 @@ void loop()
 
   if (firstRun)
   {
-    Serial.println("Following line done");
+    Serial.println("First loop done!");
     firstRun = false;
   }
 }
