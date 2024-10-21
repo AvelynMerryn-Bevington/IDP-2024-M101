@@ -20,7 +20,7 @@ private:
   Motors *mMotors;
   Leds *mLeds;
   Claw *mClaw;
-//  Imu *mImu;
+  Imu *mImu;
   LineSensors *mLineSensors;
 };
 
