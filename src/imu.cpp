@@ -7,41 +7,35 @@
 
 Imu::Imu()
 {
-  return;
-
   Serial.print("LSM6DS3 IMU initialization ");
-
+  Serial.flush();
+  
   if (!IMU.begin())
   {
     Serial.println("FAILED.");
-    IMU.end();
+    Serial.flush();
 
+    IMU.end();
     while(true){} // Kill the whole program
   }
+  mMadgwick.begin(SAMPLE_RATE_IMU_HZ);
 
   Serial.println("completed successfully.");
-  Serial.println();
-
-  madgwickFilter.begin(SAMPLE_RATE_IMU_HZ);
+  Serial.flush();
 }
 
 void Imu::GetYawAngle()
 {
-  return;
-
-  char buffer[5];
   float ax, ay, az;
   float gx, gy, gz;
-  if (!IMU.accelerationAvailable() ||
-      !IMU.gyroscopeAvailable() ||
-      !IMU.readAcceleration(ax, ay, az) ||
-      !IMU.readGyroscope(gx, gy, gz))
+  if (IMU.accelerationAvailable()
+      && IMU.gyroscopeAvailable()
+      && IMU.readAcceleration(ax, ay, az)
+      && IMU.readGyroscope(gx, gy, gz))
   {
-    return;
+    mMadgwick.updateIMU(gx, gy, gz, ax, ay, az);
+    Serial.print("Yaw = ");
+    Serial.print(mMadgwick.getYaw());
+    Serial.println(" °");
   }
-
-  madgwickFilter.updateIMU(gx, gy, gz, ax, ay, az);
-  Serial.print("Yaw = ");
-  Serial.print(dtostrf(madgwickFilter.getYaw(), 4, 0, buffer));
-  Serial.println(" °");
 }

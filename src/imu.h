@@ -10,7 +10,7 @@ public:
   void GetYawAngle();
 
 private:
-  Madgwick madgwickFilter;
+  Madgwick mMadgwick;
 };
 
 #endif // IMU_H

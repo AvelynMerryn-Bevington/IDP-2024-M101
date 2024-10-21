@@ -8,11 +8,13 @@
 LineSensors::LineSensors()
 {
   Serial.print("Line Sensors Setup...");
+  Serial.flush();
   pinMode(PIN_LEFT_FRONT_LINE_SENSOR, INPUT);
   pinMode(PIN_RIGHT_FRONT_LINE_SENSOR, INPUT);
   pinMode(PIN_LEFT_BACK_LINE_SENSOR, INPUT);
   pinMode(PIN_RIGHT_BACK_LINE_SENSOR, INPUT);
   Serial.println("Done!");
+  Serial.flush();
 }
 
 LineSensors::Background LineSensors::Read(Location loc)

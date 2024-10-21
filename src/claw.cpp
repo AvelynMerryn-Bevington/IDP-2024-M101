@@ -8,9 +8,11 @@
 Claw::Claw()
 {
   Serial.print("Claw Setup...");
+  Serial.flush();
   pinMode(PIN_MAGNETIC_SENSOR, INPUT);
   pinMode(PIN_TOUCH_SENSOR, OUTPUT);
   pinMode(PIN_SERVO_CLAW, OUTPUT);
   pinMode(PIN_SERVO_LIFT, OUTPUT);
   Serial.println("Done!");
+  Serial.flush();
 }

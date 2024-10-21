@@ -8,14 +8,17 @@
 Motors::Motors()
 {
   Serial.print("Motors setup...");
+  Serial.flush();
   mMotorShield = Adafruit_MotorShield();
 
   if (!mMotorShield.begin())
   {
     Serial.println("Could not find Motor Shield. Check wiring.");
+    Serial.flush();
     while(true){} // Kill the whole entire program
   }
   Serial.println("Done!");
+  Serial.flush();
 }
 
 Adafruit_DCMotor* Motors::GetMotor(Location loc)

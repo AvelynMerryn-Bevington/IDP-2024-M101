@@ -11,7 +11,7 @@ void Robot::Init()
   mMotors = new Motors;
   mLeds = new Leds;
   mClaw = new Claw;
-  mImu = new Imu;
+//  mImu = new Imu;
   mLineSensors = new LineSensors;
 
   SetInitialSpeed();
