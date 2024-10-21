@@ -62,8 +62,8 @@ void Led_Set(int LedPin, bool TurnedOn)
 
 void Led_UpdateStatus()
 {
-  bool carryingBox = ???;
-  bool contaminated = ???;
+  bool carryingBox = false;
+  bool contaminated = false;
 
   Led_Set(PIN_CONTAMINATION_LED, carryingBox && contaminated);
   Led_Set(PIN_NO_CONTAMINATION_LED, carryingBox && !contaminated);
@@ -108,6 +108,17 @@ void FollowLine()
 {
   const int fastSpeed = 150;
   const int slowSpeed = 100;
+
+
+  int leftMotorSpeed = 100;
+  int rightMotorSpeed = 100;
+  /*
+  if (LineSensors_Read(PIN_LEFT_BACK_LINE_SENSOR)){
+    rightMotorSpeed += 5;
+  } else if (LineSensors_Read(PIN_RIGHT_BACK_LINE_SENSOR)) {
+    rightMotorSpeed -= 5;
+  }*/
+#error do the thing
 
   int rightMotorSpeed = LineSensors_Read(PIN_LEFT_BACK_LINE_SENSOR) ? slowSpeed : fastSpeed;
   Motors_SetSpeed(MOTOR_RIGHT, rightMotorSpeed);
