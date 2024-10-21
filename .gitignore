@@ -33,3 +33,7 @@
 
 # Mac BS
 *.DS_STORE
+
+*.json
+/.pio
+/.vscode
