@@ -9,10 +9,10 @@
 
 // ------------------------------- IMU ------------------------------- //
 
+Madgwick madgwickFilter;
+
 void Imu_Setup()
 {
-  Madgwick madgwickFilter;
-
   Serial.print("LSM6DS3 IMU initialization ");
 
   if (!IMU.begin())
@@ -42,22 +42,26 @@ void Imu_GetYawAngle()
     return;
   }
 
-  filter.updateIMU(gx, gy, gz, ax, ay, az);
-  Serial.print("Yaw = ");  Serial.print(dtostrf(filter.getYaw(), 4, 0, buffer)); Serial.println(" °");
+  madgwickFilter.updateIMU(gx, gy, gz, ax, ay, az);
+  Serial.print("Yaw = ");
+  Serial.print(dtostrf(madgwickFilter.getYaw(), 4, 0, buffer));
+  Serial.println(" °");
 }
 
 // ------------------------------- LEDs ------------------------------- //
 
 void Led_Setup()
 {
+  Serial.print("LED Setup...");
   pinMode(PIN_CONTAMINATION_LED, OUTPUT);
   pinMode(PIN_NO_CONTAMINATION_LED, OUTPUT);
   pinMode(PIN_DRIVING_STATUS_LED, OUTPUT);
+  Serial.println("Done!");
 }
 
 void Led_Set(int LedPin, bool TurnedOn)
 {
-  digitalWrite(LedPin, TurnedOn);
+  digitalWrite(LedPin, TurnedOn ? HIGH : LOW);
 }
 
 void Led_UpdateStatus()
@@ -73,30 +77,54 @@ void Led_UpdateStatus()
 
 // NEEDS TO BE MOVED TO A CLASS AND STORED NON-GLOBALLY
 Adafruit_MotorShield AdafruitMotorShield = Adafruit_MotorShield();
+Adafruit_DCMotor* AdafruitMotorRight = AdafruitMotorShield.getMotor(MOTOR_RIGHT);
+Adafruit_DCMotor* AdafruitMotorLeft = AdafruitMotorShield.getMotor(MOTOR_LEFT);
 
-Adafruit_DCMotor* Motors_GetMotor(int motor)
-{
-  return AdafruitMotorShield.getMotor(motor);
-}
+uint8_t rightMotorSpeed = 100;
+uint8_t leftMotorSpeed = 100;
 
 void Motors_Run(int motor, bool forward)
 {
-  Motors_GetMotor(motor)->run(forward);
+  Serial.print("Motors run...");
+  delay(100);
+
+  if (motor == MOTOR_LEFT)
+    AdafruitMotorLeft->run(forward ? FORWARD : BACKWARD);
+  if (motor == MOTOR_RIGHT)
+    AdafruitMotorRight->run(forward ? FORWARD : BACKWARD);
+
+  Serial.println("Done!");
 }
 
 void Motors_SetSpeed(int motor, int speed)
 {
-  Motors_GetMotor(motor)->setSpeed(speed);
+  Serial.print("Motors set speed...");
+  delay(100);
+
+  if (motor == MOTOR_LEFT)
+  {
+    leftMotorSpeed = speed;
+    AdafruitMotorLeft->setSpeed(speed);
+  }
+  else if (motor == MOTOR_RIGHT)
+  {
+    rightMotorSpeed = speed;
+    AdafruitMotorRight->setSpeed(speed);
+  }
+
+  Serial.println("Done!");
 }
 
 // ------------------------------- LINE FOLLOWING ------------------------------- //
 
 void LineSensors_Setup()
 {
+  Serial.print("Line Sensors Setup...");
   pinMode(PIN_LEFT_FRONT_LINE_SENSOR, INPUT);
   pinMode(PIN_RIGHT_FRONT_LINE_SENSOR, INPUT);
   pinMode(PIN_LEFT_BACK_LINE_SENSOR, INPUT);
   pinMode(PIN_RIGHT_BACK_LINE_SENSOR, INPUT);
+  Serial.println("Done!");
 }
 
 bool LineSensors_Read(int sensor)
@@ -106,38 +134,32 @@ bool LineSensors_Read(int sensor)
 
 void FollowLine()
 {
-  const int fastSpeed = 150;
-  const int slowSpeed = 100;
-
-
-  int leftMotorSpeed = 100;
-  int rightMotorSpeed = 100;
-  /*
-  if (LineSensors_Read(PIN_LEFT_BACK_LINE_SENSOR)){
+  if (!LineSensors_Read(PIN_LEFT_BACK_LINE_SENSOR))
+  {
     rightMotorSpeed += 5;
-  } else if (LineSensors_Read(PIN_RIGHT_BACK_LINE_SENSOR)) {
-    rightMotorSpeed -= 5;
-  }*/
-#error do the thing
+    Motors_SetSpeed(MOTOR_RIGHT, rightMotorSpeed);
+  }
 
-  int rightMotorSpeed = LineSensors_Read(PIN_LEFT_BACK_LINE_SENSOR) ? slowSpeed : fastSpeed;
-  Motors_SetSpeed(MOTOR_RIGHT, rightMotorSpeed);
+  if (!LineSensors_Read(PIN_RIGHT_BACK_LINE_SENSOR))
+  {
+    leftMotorSpeed += 5;
+    Motors_SetSpeed(MOTOR_LEFT, leftMotorSpeed);
+  }
 
-  int leftMotorSpeed = LineSensors_Read(PIN_RIGHT_BACK_LINE_SENSOR) ? slowSpeed : fastSpeed;
-  Motors_SetSpeed(MOTOR_LEFT, leftMotorSpeed);
-
-  Motors_Run(MOTOR_LEFT, forward=true);
-  Motors_Run(MOTOR_RIGHT, forward=true);
+  Motors_Run(MOTOR_RIGHT, true);
+  Motors_Run(MOTOR_LEFT, true);
 }
 
 // ------------------------------- BOX LOADING ------------------------------- //
 
 void Claw_Setup()
 {
+  Serial.print("Claw Setup...");
   pinMode(PIN_MAGNETIC_SENSOR, INPUT);
   pinMode(PIN_TOUCH_SENSOR, OUTPUT);
   pinMode(PIN_SERVO_CLAW, OUTPUT);
   pinMode(PIN_SERVO_LIFT, OUTPUT);
+  Serial.println("Done!");
 }
 
 // ------------------------------- MAIN ------------------------------- //
@@ -145,15 +167,33 @@ void Claw_Setup()
 void setup()
 {
   Serial.begin(9600);
-  while(!Serial){} // Wait for the serial to set up
+  while(!Serial){}
+  Serial.println("Initialising...");
 
   Led_Setup();
   LineSensors_Setup();
   Claw_Setup();
   Imu_Setup();
+  
+  Serial.println("Initialised");
 }
 
+bool firstRun = true;
 void loop()
 {
+  if (firstRun)
+  {
+    Serial.println("Following line...");
+    Motors_SetSpeed(MOTOR_LEFT, leftMotorSpeed);
+    Motors_SetSpeed(MOTOR_RIGHT, rightMotorSpeed);
+  }
+
+  FollowLine();
   Led_UpdateStatus();
+
+  if (firstRun)
+  {
+    Serial.println("Following line done");
+    firstRun = false;
+  }
 }
