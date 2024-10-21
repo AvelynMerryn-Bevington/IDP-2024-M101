@@ -26,8 +26,8 @@ void Robot::SetInitialSpeed()
 {
   for (int loc = 0; loc < static_cast<int>(Motors::Location::Count); loc++)
   {
-    mMotors->SetSpeed(static_cast<Motors::Location>(loc), 100);
-    mMotors->Run(static_cast<Motors::Location>(loc), Motors::Direction::Forward); 
+    mMotors->SetSpeed((Motors::Location)loc, 100);
+    mMotors->Run((Motors::Location)loc, Motors::Direction::Forward, mLeds);
   }
 }
 

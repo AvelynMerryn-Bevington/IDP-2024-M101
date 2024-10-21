@@ -36,7 +36,7 @@ Adafruit_DCMotor* Motors::GetMotor(Location loc)
   }
 }
 
-void Motors::Run(const Location loc, const Direction direction)
+void Motors::Run(const Location loc, const Direction direction, Leds *leds)
 {
   Adafruit_DCMotor *motor = GetMotor(loc);
 
@@ -44,14 +44,17 @@ void Motors::Run(const Location loc, const Direction direction)
   {
   case Forward:
     motor->run(FORWARD);
+    leds->SetMoving(true);
     break;
 
   case Backward:
     motor->run(BACKWARD);
+    leds->SetMoving(true);
     break;
 
   case Stopped:
     motor->run(BRAKE);
+    leds->SetMoving(false);
     break;
   }
 }
@@ -66,6 +69,16 @@ void Motors::SetSpeed(const Location loc, const uint8_t speed)
 
 void Motors::AdjustSpeed(const Location loc, const int speedChange)
 {
-  uint8_t newSpeed = static_cast<uint8_t>(static_cast<int>(mMotorSpeeds[loc]) + speedChange);
-  SetSpeed(loc, newSpeed);
+  int newSpeed = mMotorSpeeds[loc] + speedChange;
+  if (newSpeed < 0)
+  {
+    Serial.println("Speed capped at lower-limit of 0.");
+    newSpeed = 0;
+  }
+  if (newSpeed > 255)
+  {
+    Serial.println("Speed capped at upper-limit max speed.");
+    newSpeed = 255;
+  }
+  SetSpeed(loc, (uint8_t)newSpeed);
 }

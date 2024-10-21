@@ -15,11 +15,15 @@ public:
     BackLeft,
     BackRight,
     FrontLeft,
-    FrontRight
+    FrontRight,
+    Count
   };
 
   LineSensors();
   Background Read(Location loc);
+
+private:
+  int GetSensor(Location loc);
 };
 
 #endif // LINE_SENSORS_H

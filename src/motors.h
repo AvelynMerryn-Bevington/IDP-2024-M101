@@ -2,6 +2,7 @@
 #define MOTORS_H
 
 #include <Adafruit_MotorShield.h>
+#include "leds.h"
 
 class Motors
 {
@@ -22,7 +23,7 @@ public:
 
   Motors();
 
-  void Run(const Location loc, const Direction direction);
+  void Run(const Location loc, const Direction direction, Leds *leds);
   void SetSpeed(const Location loc, const uint8_t speed);
   void AdjustSpeed(const Location loc, const int speedChange);
 
