@@ -13,7 +13,11 @@ void Robot::Init()
   mClaw = new Claw;
   mImu = new Imu;
   mLineSensors = new LineSensors;
+  mStartButton = new StartButton;
 
+  while(!mStartButton->Read()){
+
+  }
   SetInitialSpeed();
 }
 
