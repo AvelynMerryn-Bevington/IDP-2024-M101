@@ -16,7 +16,7 @@ void Ultrasonic::UltrasonicDistance()
     float distance, direct_reading;
 
     direct_reading = analogRead(PIN_ULTRASONIC_SENSOR);
-    distance = direct_reading * ULTRASONIC_SENSOR_MAX_RANGE;
+    distance = direct_reading * ULTRASONIC_SENSOR_MAX_RANGE / ADC_ACCURACY;
 
     Serial.print(distance,0);
     Serial.println("cm");
