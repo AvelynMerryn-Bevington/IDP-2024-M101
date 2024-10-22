@@ -31,10 +31,8 @@ void Robot::Loop()
 
 void Robot::SetInitialSpeed()
 {
-  mMotors->SetSpeed(Motors::Location(0), 0);
-  mMotors->SetSpeed(Motors::Location(1), 0);
-  //mMotors->SetSpeed(Motors::Location(0), 255);
-  //mMotors->SetSpeed(Motors::Location(1), 243);
+  mMotors->SetSpeed(Motors::Location(0), 255);
+  mMotors->SetSpeed(Motors::Location(1), 243);
   for (int loc = 0; loc < static_cast<int>(Motors::Location::Count); loc++)
   {
     mMotors->Run(static_cast<Motors::Location>(loc), Motors::Direction::Backward); 
