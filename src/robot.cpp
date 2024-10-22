@@ -13,6 +13,7 @@ void Robot::Init()
   mClaw = new Claw;
   mImu = new Imu;
   mLineSensors = new LineSensors;
+  mUltrasonic = new Ultrasonic;
   mStartButton = new StartButton;
 
   while(!mStartButton->Read()){
@@ -23,13 +24,17 @@ void Robot::Init()
 
 void Robot::Loop()
 {
-  FollowLine();
+  //FollowLine();
+  mUltrasonic->UltrasonicDistance();
+  delay(1000);
 }
 
 void Robot::SetInitialSpeed()
 {
-  mMotors->SetSpeed(Motors::Location(0), 255);
-  mMotors->SetSpeed(Motors::Location(1), 243);
+  mMotors->SetSpeed(Motors::Location(0), 0);
+  mMotors->SetSpeed(Motors::Location(1), 0);
+  //mMotors->SetSpeed(Motors::Location(0), 255);
+  //mMotors->SetSpeed(Motors::Location(1), 243);
   for (int loc = 0; loc < static_cast<int>(Motors::Location::Count); loc++)
   {
     mMotors->Run(static_cast<Motors::Location>(loc), Motors::Direction::Backward); 
