@@ -6,6 +6,8 @@
 #include "claw.h"
 #include "imu.h"
 #include "line_sensors.h"
+#include "ultrasonic.h"
+
 
 class Robot
 {
@@ -22,6 +24,7 @@ private:
   Claw *mClaw;
 //  Imu *mImu;
   LineSensors *mLineSensors;
+  Ultrasonic *mUltrasonic;
 };
 
 #endif // ROBOT_H
