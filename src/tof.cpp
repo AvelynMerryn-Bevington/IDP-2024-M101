@@ -21,6 +21,6 @@ void Tof::TofDistance()
 {   
     float distance = TofSensor.getDistance();
     Serial.print("TOF Distance: ");
-    Serial.println(distance);
+    Serial.println(distance/10);
  
 }
