@@ -14,6 +14,7 @@ void Robot::Init()
   mImu = new Imu;
   mLineSensors = new LineSensors;
   mUltrasonic = new Ultrasonic;
+  mTof = new Tof;
   mStartButton = new StartButton;
 
   while(!mStartButton->Read()){
@@ -25,7 +26,7 @@ void Robot::Init()
 void Robot::Loop()
 {
   //FollowLine();
-  mUltrasonic->UltrasonicDistance();
+  mTof->TofDistance();
   delay(1000);
 }
 

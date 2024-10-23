@@ -7,6 +7,7 @@
 #include "imu.h"
 #include "line_sensors.h"
 #include "ultrasonic.h"
+#include "tof.h"
 #include "start_button.h"
 
 
@@ -26,6 +27,7 @@ private:
   Imu *mImu;
   LineSensors *mLineSensors;
   Ultrasonic *mUltrasonic;
+  Tof *mTof;
   StartButton *mStartButton;
 };
 
