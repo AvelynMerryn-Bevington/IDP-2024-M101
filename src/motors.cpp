@@ -69,3 +69,48 @@ void Motors::AdjustSpeed(const Location loc, const int speedChange)
   uint8_t newSpeed = static_cast<uint8_t>(static_cast<int>(mMotorSpeeds[loc]) + speedChange);
   SetSpeed(loc, newSpeed);
 }
+
+void Motors::Turn(Turning direction)
+//Input: Turn direction (Lefty/Righty)
+//No code output. Makes robot turn 90 degrees in either direction
+{
+  //define motor objects
+  Adafruit_DCMotor *motorleft = GetMotor(Left);
+  Adafruit_DCMotor *motorright = GetMotor(Right);
+
+  uint8_t i;
+
+  if (direction == Lefty) //left 
+  {
+    motorleft->run(BACKWARD);
+    motorright->run(FORWARD);
+
+    //ADJUST NUMBERS TO MAKE 90 DEGREE TURNS
+    for (i=0; i<120; i++) {
+      motorleft->setSpeed(200);
+      motorright->setSpeed(200);
+      delay(10);
+    }
+  } 
+  else if (direction == Righty) //right turn
+  {
+    motorleft->run(FORWARD);
+    motorright->run(BACKWARD);
+    //ADJUST NUMBERS TO MAKE 90 DEGREE TURNS
+    for (i=0; i<120; i++) {
+      motorleft->setSpeed(200);
+      motorright->setSpeed(200);
+      delay(10);
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
