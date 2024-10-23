@@ -25,9 +25,7 @@ void Robot::Init()
 
 void Robot::Loop()
 {
-  //FollowLine();
-  mTof->TofDistance();
-  delay(1000);
+  FollowLine();
 }
 
 void Robot::SetInitialSpeed()
@@ -42,11 +40,19 @@ void Robot::SetInitialSpeed()
 
 void Robot::FollowLine()
 {
-  mImu->GetYawAngle();
-  
+  int FastRight = 245, SlowRight = 240;
+
+  if (mLineSensors->Read(LineSensors::Location::BackLeft) == LineSensors::Background::Black){
+    mMotors->SetSpeed(Motors::Location(1), SlowRight);
+  }
+  if (mLineSensors->Read(LineSensors::Location::BackRight) == LineSensors::Background::Black){
+    mMotors->SetSpeed(Motors::Location(1), FastRight);
+  }
+  /*
   if (mLineSensors->Read(LineSensors::Location::BackLeft) == LineSensors::Background::Black)
     mMotors->AdjustSpeed(Motors::Location::Left, 5);
 
   if (mLineSensors->Read(LineSensors::Location::BackRight) == LineSensors::Background::Black)
     mMotors->AdjustSpeed(Motors::Location::Right, 5);
+  */
 }
