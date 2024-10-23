@@ -15,8 +15,14 @@ public:
   void Claw::ServoDrop();
   void Claw::ServoPickup();
   
+  
+  
 private:
   Servo GetServo(Purpose pur);
+  void Claw::TrashDetectionSeq();
+  bool Claw::ReadMagnetic();
+
+  Leds *mLeds;
 
 };
 
