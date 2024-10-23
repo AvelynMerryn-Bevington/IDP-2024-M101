@@ -14,6 +14,7 @@ void Robot::Init()
 //  mImu = new Imu;
   mLineSensors = new LineSensors;
   mUltrasonic = new Ultrasonic;
+  mTof = new Tof;
 
   SetInitialSpeed();
 }
@@ -21,7 +22,7 @@ void Robot::Init()
 void Robot::Loop()
 {
   FollowLine();
-  mUltrasonic->UltrasonicDistance();
+  mTof->TofDistance();
 }
 
 void Robot::SetInitialSpeed()

@@ -7,6 +7,7 @@
 #include "imu.h"
 #include "line_sensors.h"
 #include "ultrasonic.h"
+#include "tof.h"
 
 
 class Robot
@@ -25,6 +26,7 @@ private:
 //  Imu *mImu;
   LineSensors *mLineSensors;
   Ultrasonic *mUltrasonic;
+  Tof *mTof;
 };
 
 #endif // ROBOT_H
