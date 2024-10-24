@@ -20,6 +20,5 @@ void Ultrasonic::UltrasonicDistance()
 
     Serial.print(distance,0);
     Serial.println("cm");
-
-    
 }
+

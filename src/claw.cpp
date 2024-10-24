@@ -3,17 +3,14 @@
 #include <Arduino.h>
 #include <Arduino_LSM6DS3.h>
 #include "DFRobot_VL53L0X.h"
-
 #include "m101_hardware_config.h"
-
-#include <Servo.h> //for servos
+#include <Servo.h>
 
 Claw::Claw()
 {
   Serial.print("Claw Setup...");
   Serial.flush();
   pinMode(PIN_MAGNETIC_SENSOR, INPUT);
-  //pinMode(PIN_TOUCH_SENSOR, OUTPUT);
   pinMode(PIN_SERVO_CLAW, OUTPUT);
   pinMode(PIN_SERVO_LIFT, OUTPUT);
   
@@ -104,7 +101,3 @@ void Claw::TrashDetectionSeq()
 
 
 
-
-
-//Need function to read magnetic sensor
-//Need function to read ultrasonic sensor?
