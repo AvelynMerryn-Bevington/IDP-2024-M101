@@ -94,7 +94,15 @@ void Motors::Turn(Turning direction)
       motorright->setSpeed(200);
       delay(10);
     }
+    //Slight forward motion to get back on the line
+    motorleft->run(FORWARD);
+    for(i=0; i<100; i++) {
+      motorleft->setSpeed(200);
+      motorright->setSpeed(200);
+      delay(10);
+    }
   } 
+
   else if (direction == Righty) //right turn
   {
     motorleft->run(FORWARD);
@@ -105,13 +113,28 @@ void Motors::Turn(Turning direction)
       motorright->setSpeed(200);
       delay(10);
     }
+    //Slight forward motion to get back on the line
+    motorright->run(FORWARD);
+    for(i=0; i<100; i++) {
+      motorleft->setSpeed(200);
+      motorright->setSpeed(200);
+      delay(10);
+    }
   }
+  
   else if (direction == About) //about turn (180 deg)
   {
     motorleft->run(FORWARD);
     motorright->run(BACKWARD);
     //ADJUST NUMBERS TO MAKE 180 DEGREE TURN
     for (i=0; i<240; i++) {
+      motorleft->setSpeed(200);
+      motorright->setSpeed(200);
+      delay(10);
+    }
+    //Slight forward motion to get back on the line
+    motorright->run(FORWARD);
+    for(i=0; i<100; i++) {
       motorleft->setSpeed(200);
       motorright->setSpeed(200);
       delay(10);
