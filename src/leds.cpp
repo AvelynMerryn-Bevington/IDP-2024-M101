@@ -9,9 +9,11 @@ Leds::Leds()
 {
   Serial.print("LED Setup...");
   Serial.flush();
+
   pinMode(PIN_CONTAMINATION_LED, OUTPUT);
   pinMode(PIN_NO_CONTAMINATION_LED, OUTPUT);
   pinMode(PIN_DRIVING_STATUS_LED, OUTPUT);
+  
   Serial.println("Done!");
   Serial.flush();
 }

@@ -6,6 +6,5 @@ class Ultrasonic
 public:
     Ultrasonic();
     void UltrasonicDistance();
-
 };
 #endif // ULTRASONIC_H

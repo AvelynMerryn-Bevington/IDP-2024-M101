@@ -8,10 +8,6 @@ public:
   void SetCarrying(bool carrying, bool contaminated);
   void SetMoving(bool moving);
   void Set(int Led, bool isOn);
-  
-
-private:
-  
 };
 
 #endif // LEDS_H

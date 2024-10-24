@@ -3,24 +3,22 @@
 #include <Arduino.h>
 #include <Arduino_LSM6DS3.h>
 #include "DFRobot_VL53L0X.h"
-#include "m101_hardware_config.h"
 #include <Servo.h>
+
+#include "m101_hardware_config.h"
 
 Claw::Claw()
 {
   Serial.print("Claw Setup...");
   Serial.flush();
+
   pinMode(PIN_MAGNETIC_SENSOR, INPUT);
   pinMode(PIN_SERVO_CLAW, OUTPUT);
   pinMode(PIN_SERVO_LIFT, OUTPUT);
-  
-
 
   Serial.println("Done!");
   Serial.flush();
 }
-
-
 
 Servo Claw::GetServo(Purpose pur)
 //function allocates the pins of the arduino to the servos based on their intended purpose
@@ -43,7 +41,6 @@ Servo Claw::GetServo(Purpose pur)
 
 void Claw::ServoDrop()
 //Drops the claw arm into default position
-//returns nothing atm
 {
   Servo servolift,servopinch;
   servolift = GetServo(Lift);
@@ -58,7 +55,6 @@ void Claw::ServoDrop()
 
 void Claw::ServoPickup()
 //pinches and lifts claw arm
-//returns nothing atm
 {
   Servo servolift,servopinch;
   servolift = GetServo(Lift);
@@ -66,26 +62,25 @@ void Claw::ServoPickup()
 
   delay(1000);
   servopinch.write(125);//clamp ------> if each clamp loosens the servo, we can make it so that every following clamp squeezes more: pos = (150-10*x) or something
-  delay(3000);//time for clamp to close
+  delay(3000);
 
   //LED sequence for contamination
   TrashDetectionSeq();
 
   servolift.write(0); //lift box off the ground
-  delay(2000); //wait for lift
+  delay(2000);
 
   //turn off contamination detection LEDs
   mLeds->Set(PIN_CONTAMINATION_LED,false);
   mLeds->Set(PIN_NO_CONTAMINATION_LED,false);
 }
 
-
 bool Claw::ReadMagnetic()
 //detects if magnetic sensor gets activated or not
 //returns boolean value (True if magnetic!)
 {
   int val = digitalRead(PIN_MAGNETIC_SENSOR);
-  if (val == HIGH) { // check if the input is HIGH
+  if (val == HIGH) {
     return true;
   } else {
     return false;
@@ -93,11 +88,8 @@ bool Claw::ReadMagnetic()
 }
 
 void Claw::TrashDetectionSeq()
-//turns on LED if is magnetic
+//turns on corresponding LED if it is magnetic or not
 {
   mLeds->Set(PIN_CONTAMINATION_LED,ReadMagnetic());
   mLeds->Set(PIN_NO_CONTAMINATION_LED,!ReadMagnetic());
 }
-
-
-
