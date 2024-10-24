@@ -21,5 +21,5 @@ LineSensors::LineSensors()
 
 LineSensors::Background LineSensors::Read(Location loc)
 {
-  return digitalRead((pin_size_t)loc) ? Background::White : Background::Black;
+  return digitalRead((pin_size_t)loc+2) ? Background::White : Background::Black;
 }

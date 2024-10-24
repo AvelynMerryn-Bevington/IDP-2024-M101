@@ -19,7 +19,7 @@ void Robot::Init()
 
   //while(!mStartButton->Read()){}
 
-  //SetInitialSpeed();
+  SetInitialSpeed();
 }
 
 void Robot::Loop()
@@ -30,7 +30,7 @@ void Robot::Loop()
 void Robot::SetInitialSpeed()
 {
   mMotors->SetSpeed(Motors::Location(0), 255);
-  mMotors->SetSpeed(Motors::Location(1), 243);
+  mMotors->SetSpeed(Motors::Location(1), 247);
   for (int loc = 0; loc < static_cast<int>(Motors::Location::Count); loc++)
   {
     mMotors->Run(static_cast<Motors::Location>(loc), Motors::Direction::Backward); 
@@ -39,26 +39,19 @@ void Robot::SetInitialSpeed()
 
 void Robot::FollowLine()
 {
-  int SlowLeft = 100, SlowRight = 100;
-  Serial.println(mLineSensors->Read(LineSensors::Location::BackRight));
-  /*
-  Serial.print(LineSensors::Location::BackLeft);
-  Serial.println(mLineSensors->Read(LineSensors::Location::BackLeft));
-  Serial.println(LineSensors::Location::BackRight);
-  Serial.println(mLineSensors->Read(LineSensors::Location::BackRight));
-  
+  int SlowLeft = 240, SlowRight = 230;
+
   if (mLineSensors->Read(LineSensors::Location::BackLeft) == LineSensors::Background::Black){
-    mMotors->AdjustSpeed(Motors::Location(1), SlowRight);
+    mMotors->SetSpeed(Motors::Location(1), SlowRight);
     Serial.println("Adjusting Right");
   }
   else if (mLineSensors->Read(LineSensors::Location::BackRight) == LineSensors::Background::Black){
-    mMotors->AdjustSpeed(Motors::Location(0), SlowLeft);
+    mMotors->SetSpeed(Motors::Location(0), SlowLeft);
     Serial.println("Adjusting Left");
   }
   else{
-    mMotors->AdjustSpeed(Motors::Location(0), 255);
-    mMotors->AdjustSpeed(Motors::Location(1), 243);
+    mMotors->SetSpeed(Motors::Location(0), 255);
+    mMotors->SetSpeed(Motors::Location(1), 247);
     Serial.println("Straight");
   }
-  */
 }
