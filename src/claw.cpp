@@ -104,7 +104,3 @@ void Claw::TrashDetectionSeq()
 
 
 
-
-
-//Need function to read magnetic sensor
-//Need function to read ultrasonic sensor?

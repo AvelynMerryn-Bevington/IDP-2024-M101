@@ -25,8 +25,7 @@ void Robot::Init()
 
 void Robot::Loop()
 {
-  //Serial.begin(9600); Do we need this?
-  //FollowLine();
+  FollowLine();
   mTof->TofDistance();
   delay(1000);
 }

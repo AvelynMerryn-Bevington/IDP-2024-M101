@@ -23,7 +23,8 @@ public:
   enum Turning //Must be different string to enum Location
   {
     Lefty,
-    Righty
+    Righty,
+    About
   };
 
   Motors();

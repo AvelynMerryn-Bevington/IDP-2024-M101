@@ -56,6 +56,7 @@ void Motors::Run(const Location loc, const Direction direction)
   }
 }
 
+
 void Motors::SetSpeed(const Location loc, const uint8_t speed)
 {
   Adafruit_DCMotor *motor = GetMotor(loc);
@@ -64,11 +65,13 @@ void Motors::SetSpeed(const Location loc, const uint8_t speed)
   motor->setSpeed(speed);
 }
 
+
 void Motors::AdjustSpeed(const Location loc, const int speedChange)
 {
   uint8_t newSpeed = static_cast<uint8_t>(static_cast<int>(mMotorSpeeds[loc]) + speedChange);
   SetSpeed(loc, newSpeed);
 }
+
 
 void Motors::Turn(Turning direction)
 //Input: Turn direction (Lefty/Righty)
@@ -80,7 +83,7 @@ void Motors::Turn(Turning direction)
 
   uint8_t i;
 
-  if (direction == Lefty) //left 
+  if (direction == Lefty) //left turn
   {
     motorleft->run(BACKWARD);
     motorright->run(FORWARD);
@@ -98,6 +101,17 @@ void Motors::Turn(Turning direction)
     motorright->run(BACKWARD);
     //ADJUST NUMBERS TO MAKE 90 DEGREE TURNS
     for (i=0; i<120; i++) {
+      motorleft->setSpeed(200);
+      motorright->setSpeed(200);
+      delay(10);
+    }
+  }
+  else if (direction == About) //about turn (180 deg)
+  {
+    motorleft->run(FORWARD);
+    motorright->run(BACKWARD);
+    //ADJUST NUMBERS TO MAKE 180 DEGREE TURN
+    for (i=0; i<240; i++) {
       motorleft->setSpeed(200);
       motorright->setSpeed(200);
       delay(10);
