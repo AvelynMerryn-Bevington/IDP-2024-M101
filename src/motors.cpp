@@ -109,7 +109,7 @@ void Motors::Turn(Turning direction)
       delay(10);
 
       //Test to see if line is detected
-      if (mLineSensors->Read(LineSensors::Location::BackLeft) == LineSensors::Background::White) {
+      if (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White) {
         rotate == false;
       } else {
         rotate == true;
@@ -137,7 +137,7 @@ void Motors::Turn(Turning direction)
       delay(10);
 
       //Test to see if line is detected
-      if (mLineSensors->Read(LineSensors::Location::BackRight) == LineSensors::Background::White) {
+      if (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White) {
         rotate == false;
       } else {
         rotate == true;
@@ -169,7 +169,7 @@ void Motors::Turn(Turning direction)
       delay(10);
 
       //Test to see if line is detected
-      if (mLineSensors->Read(LineSensors::Location::BackLeft) == LineSensors::Background::White) {
+      if (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White) {
         rotate == false;
       } else {
         rotate == true;

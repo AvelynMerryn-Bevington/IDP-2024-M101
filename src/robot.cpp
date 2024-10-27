@@ -42,10 +42,10 @@ void Robot::FollowLine()
 {
   int FastRight = 245, SlowRight = 240;
 
-  if (mLineSensors->Read(LineSensors::Location::BackLeft) == LineSensors::Background::Black){
+  if (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::Black){
     mMotors->SetSpeed(Motors::Location(1), SlowRight);
   }
-  if (mLineSensors->Read(LineSensors::Location::BackRight) == LineSensors::Background::Black){
+  if (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::Black){
     mMotors->SetSpeed(Motors::Location(1), FastRight);
   }
 }

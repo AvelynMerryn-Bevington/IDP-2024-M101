@@ -12,10 +12,10 @@ public:
 
   enum Location
   {
-    BackLeft,
-    BackRight,
-    FrontLeft,
-    FrontRight
+    MidLeft,
+    MidRight,
+    WideLeft,
+    WideRight
   };
 
   LineSensors();
