@@ -18,6 +18,9 @@ LineSensors::LineSensors()
 }
 
 LineSensors::Background LineSensors::Read(Location loc)
+//Reads sensors
+//input: location of sensor
+//output: Black/White
 {
   return digitalRead((pin_size_t)loc) ? Background::White : Background::Black;
 

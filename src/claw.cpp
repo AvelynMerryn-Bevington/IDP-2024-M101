@@ -24,7 +24,9 @@ Claw::Claw()
 
 Servo Claw::GetServo(Purpose pur)
 //function allocates the pins of the arduino to the servos based on their intended purpose
+//input: (Lift/Pinch)
 //Returns Servo object which can be used in functions such as servolift.write(90)
+//output: Servo object - servolift/servopinch
 {
   Servo servolift,servopinch;
   switch (pur)
@@ -56,7 +58,8 @@ void Claw::ServoDrop()
   delay(3000);
 }
 
-void Claw::ServoPickup()
+void Claw::ServoPickup() //-----------> CONSIDER writing in ultrasonicboxcheck() functionality, and a pinch-to-unpinch... 
+                         //...sequence to move the box into the right position for the ultrasonic
 //pinches and lifts claw arm
 //returns nothing atm
 {
@@ -80,7 +83,7 @@ void Claw::ServoPickup()
 }
 
 
-bool Claw::ReadMagnetic()
+bool Claw::ReadMagnetic() //-> used in TrashDetectionSeq command
 //detects if magnetic sensor gets activated or not
 //returns boolean value (True if magnetic!)
 {
@@ -92,8 +95,8 @@ bool Claw::ReadMagnetic()
   }
 }
 
-void Claw::TrashDetectionSeq()
-//turns on LED if is magnetic
+void Claw::TrashDetectionSeq() //-> used during ServoPickup command
+//turns on LED if is magnetic 
 {
   mLeds->Set(PIN_CONTAMINATION_LED,ReadMagnetic());
   mLeds->Set(PIN_NO_CONTAMINATION_LED,!ReadMagnetic());

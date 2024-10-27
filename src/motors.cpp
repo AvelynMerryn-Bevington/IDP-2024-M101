@@ -59,6 +59,8 @@ void Motors::Run(const Location loc, const Direction direction)
 
 
 void Motors::SetSpeed(const Location loc, const uint8_t speed)
+//input (which motor? , speed)
+//sets the speed of the motor. Use mmotor->run() command to activate motor
 {
   Adafruit_DCMotor *motor = GetMotor(loc);
 
@@ -67,6 +69,8 @@ void Motors::SetSpeed(const Location loc, const uint8_t speed)
 }
 
 
+
+//------Kerry: I think this is a useless function? i think you can just use SetSpeed function. Whoever wrote this please lmk
 void Motors::AdjustSpeed(const Location loc, const int speedChange)
 {
   uint8_t newSpeed = static_cast<uint8_t>(static_cast<int>(mMotorSpeeds[loc]) + speedChange);
@@ -178,6 +182,8 @@ void Motors::Turn(Turning direction)
     }
 
   }
+  //Consider writing in the followline() code into the end of the turn function -> speak to Kerry
+
 }
 
 
