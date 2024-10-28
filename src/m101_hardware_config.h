@@ -16,8 +16,8 @@
 #define PIN_SERVO_CLAW 11
 #define PIN_SERVO_LIFT 12
 
-#define MOTOR_LEFT 1
-#define MOTOR_RIGHT 2
+#define MOTOR_LEFT 2
+#define MOTOR_RIGHT 1
 
 #define SAMPLE_RATE_IMU_HZ 10
 

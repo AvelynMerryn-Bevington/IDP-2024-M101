@@ -17,7 +17,7 @@ void Robot::Init()
   mTof = new Tof;
   mStartButton = new StartButton;
 
-  //while(!mStartButton->Read()){}
+  while(!mStartButton->Read()){}
 
   SetInitialSpeed();
 }
@@ -29,8 +29,8 @@ void Robot::Loop()
 
 void Robot::SetInitialSpeed()
 {
-  mMotors->SetSpeed(Motors::Location(0), 255);
-  mMotors->SetSpeed(Motors::Location(1), 250);
+  mMotors->SetSpeed(Motors::Location::Left, 200);
+  mMotors->SetSpeed(Motors::Location::Right, 250);
   for (int loc = 0; loc < static_cast<int>(Motors::Location::Count); loc++)
   {
     mMotors->Run(static_cast<Motors::Location>(loc), Motors::Direction::Backward); 
@@ -39,7 +39,7 @@ void Robot::SetInitialSpeed()
 
 void Robot::FollowLine()
 {
-  int FastRight = 250, SlowRight = 240;
+  int FastRight = 250, SlowRight = 0;
 
   bool LeftLineSensorWhite = (mLineSensors->Read(LineSensors::Location::BackLeft) == LineSensors::Background::White);
   bool RightLineSensorWhite = (mLineSensors->Read(LineSensors::Location::BackRight) == LineSensors::Background::White);
