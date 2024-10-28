@@ -22,13 +22,13 @@ class Mapping
     };
 
     enum Direction{
-        Forward, 
-        Left, 
-        Right, 
-        End, 
-        Temp
+        Forward,
+        Left,
+        Right,
+        End
     };
-    std::array<Mapping::Direction, 10> DirectionInstructions(Mapping::Node, Mapping::Node);
+
+    std::array<Mapping::Direction, 10> FetchRoute(Mapping::Node, Mapping::Node);
 
     private:
     std::map<std::array<Mapping::Node, 2>, std::array<Mapping::Direction, 10>> DirectionMap { 

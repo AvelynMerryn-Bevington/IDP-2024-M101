@@ -9,7 +9,8 @@
 #include "ultrasonic.h"
 #include "tof.h"
 #include "start_button.h"
-
+#include "mapping.h"
+#include "ArxContainer.h"
 
 class Robot
 {
@@ -20,6 +21,7 @@ public:
 private:
   void SetInitialSpeed();
   void FollowLine();
+  void Navigation();
 
   Motors *mMotors;
   Leds *mLeds;
@@ -29,6 +31,7 @@ private:
   Ultrasonic *mUltrasonic;
   Tof *mTof;
   StartButton *mStartButton;
+  Mapping *mMapping;
 };
 
 #endif // ROBOT_H
