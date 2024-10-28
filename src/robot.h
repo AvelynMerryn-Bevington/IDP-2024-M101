@@ -23,6 +23,16 @@ private:
   void FollowLine();
   void Navigation();
 
+  int Count = 0;
+  bool Junction = true;
+  std::array<Mapping::Direction, 10> Route;
+
+  enum Purpose{
+    CarryingBox,
+    FetchingBox,
+    ReturningToStart
+  };
+
   Motors *mMotors;
   Leds *mLeds;
   Claw *mClaw;

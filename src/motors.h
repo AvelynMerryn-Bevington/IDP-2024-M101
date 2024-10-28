@@ -2,6 +2,7 @@
 #define MOTORS_H
 
 #include <Adafruit_MotorShield.h>
+#include "line_sensors.h"
 
 class Motors
 {
