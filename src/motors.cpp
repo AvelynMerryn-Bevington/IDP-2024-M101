@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <Arduino_LSM6DS3.h>
 #include "DFRobot_VL53L0X.h"
+#include "line_sensors.h"
 
 #include "m101_hardware_config.h"
 
@@ -73,46 +74,106 @@ void Motors::AdjustSpeed(const Location loc, const int speedChange)
 
 void Motors::Turn(Turning direction)
 //Input: Turn direction (Lefty/Righty)
-//Makes robot turn 90 degrees in either direction
+//No code output. Makes robot turn 90 degrees in either direction
+//After turn, make sure to reengage linefollowing algorithm
 {
   Adafruit_DCMotor *motorleft = GetMotor(Left);
   Adafruit_DCMotor *motorright = GetMotor(Right);
 
   uint8_t i;
 
+  //stop motors
+  motorleft->run(RELEASE);
+  motorright->run(RELEASE);
+  delay(300);
+
   if (direction == Lefty) //left turn
   {
     motorleft->run(BACKWARD);
     motorright->run(FORWARD);
 
-    //ADJUST NUMBERS TO MAKE 90 DEGREE TURNS
-    for (i=0; i<120; i++) {
+    //rotate for little bit (so the line sensors can leave the white line without complications)
+    motorleft->setSpeed(200);
+    motorright->setSpeed(200);
+    delay(300);
+
+    //turn until line sensor detects line
+    bool rotate = true;
+    while (rotate == true) {
+      //turn
       motorleft->setSpeed(200);
       motorright->setSpeed(200);
       delay(10);
+
+      //Test to see if line is detected
+      if (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White) {
+        rotate == false;
+      } else {
+        rotate == true;
+      }
+
     }
+
   } 
   else if (direction == Righty) //right turn
   {
     motorleft->run(FORWARD);
     motorright->run(BACKWARD);
-    //ADJUST NUMBERS TO MAKE 90 DEGREE TURNS
-    for (i=0; i<120; i++) {
+
+    //rotate for little bit (so the line sensors can leave the white line without complications)
+    motorleft->setSpeed(200);
+    motorright->setSpeed(200);
+    delay(300);
+
+    //turn until line sensor detects line
+    bool rotate = true;
+    while (rotate == true) {
+      //turn
       motorleft->setSpeed(200);
       motorright->setSpeed(200);
       delay(10);
+
+      //Test to see if line is detected
+      if (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White) {
+        rotate == false;
+      } else {
+        rotate == true;
+      }
+
     }
+
   }
-  else if (direction == About) //about turn (180 deg)
+  
+  else if (direction == About) //about turn (180 deg) TO THE LEFT
+
+  // u turn ONLY WORKS if there are NO OTHER LINES (ie 90deg turn lines) to interrupt it -> do not turn at nodes w 90deg turns
+  // (it is the same code as a left turn)
   {
-    motorleft->run(FORWARD);
-    motorright->run(BACKWARD);
-    //ADJUST NUMBERS TO MAKE 180 DEGREE TURN
-    for (i=0; i<240; i++) {
+    motorleft->run(BACKWARD);
+    motorright->run(FORWARD);
+
+    //rotate for little bit (so the line sensors can leave the white line without complications)
+    motorleft->setSpeed(200);
+    motorright->setSpeed(200);
+    delay(300);
+
+    //turn until line sensor detects line
+    bool rotate = true;
+    while (rotate == true) {
+      //turn
       motorleft->setSpeed(200);
       motorright->setSpeed(200);
       delay(10);
+
+      //Test to see if line is detected
+      if (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White) {
+        rotate == false;
+      } else {
+        rotate == true;
+      }
+
     }
+
   }
 }
 

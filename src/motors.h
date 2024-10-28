@@ -38,6 +38,8 @@ private:
   Adafruit_MotorShield mMotorShield;
   Adafruit_DCMotor* GetMotor(Location loc);
   uint8_t mMotorSpeeds[Location::Count];
+
+  LineSensors *mLineSensors;
 };
 
 #endif // MOTORS_H

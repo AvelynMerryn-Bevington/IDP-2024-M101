@@ -25,6 +25,7 @@ void Robot::Init()
 void Robot::Loop()
 {
   FollowLine();
+  
 }
 
 void Robot::SetInitialSpeed()
@@ -41,8 +42,8 @@ void Robot::FollowLine()
 {
   int FastRight = 250, SlowRight = 0;
 
-  bool LeftLineSensorWhite = (mLineSensors->Read(LineSensors::Location::BackLeft) == LineSensors::Background::White);
-  bool RightLineSensorWhite = (mLineSensors->Read(LineSensors::Location::BackRight) == LineSensors::Background::White);
+  bool LeftLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White);
+  bool RightLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White);
   
   if (!LeftLineSensorWhite && RightLineSensorWhite){
     mMotors->SetSpeed(Motors::Location(1), SlowRight);
