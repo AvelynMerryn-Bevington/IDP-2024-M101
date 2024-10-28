@@ -59,6 +59,8 @@ void Motors::Run(const Location loc, const Direction direction)
 }
 
 void Motors::SetSpeed(const Location loc, const uint8_t speed)
+//input (which motor? , speed)
+//sets the speed of the motor. Use mmotor->run() command to activate motor
 {
   Adafruit_DCMotor *motor = GetMotor(loc);
 
@@ -107,12 +109,13 @@ void Motors::Turn(Turning direction)
 
       //Test to see if line is detected
       if (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White) {
-        rotate == false;
+        rotate = false;
       } else {
-        rotate == true;
+        rotate = true;
       }
-
     }
+    motorleft->run(RELEASE);
+    motorright->run(RELEASE);
 
   } 
   else if (direction == Righty) //right turn
@@ -135,12 +138,13 @@ void Motors::Turn(Turning direction)
 
       //Test to see if line is detected
       if (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White) {
-        rotate == false;
+        rotate = false;
       } else {
-        rotate == true;
+        rotate = true;
       }
-
     }
+    motorleft->run(RELEASE);
+    motorright->run(RELEASE);
 
   }
   
@@ -167,14 +171,18 @@ void Motors::Turn(Turning direction)
 
       //Test to see if line is detected
       if (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White) {
-        rotate == false;
+        rotate = false;
       } else {
-        rotate == true;
+        rotate = true;
       }
-
+      
     }
+    motorleft->run(RELEASE);
+    motorright->run(RELEASE);
 
   }
+  //Consider writing in the followline() code into the end of the turn function -> speak to Kerry
+
 }
 
 

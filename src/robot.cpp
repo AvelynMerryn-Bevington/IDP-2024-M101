@@ -24,6 +24,7 @@ void Robot::Init()
 
 void Robot::Loop()
 {
+  
   FollowLine();
   
 }
