@@ -43,3 +43,5 @@ LineSensors::Background LineSensors::Read(Location loc)
 
   return (readStatus == HIGH) ? Background::White : Background::Black; 
 }
+
+
