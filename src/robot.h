@@ -29,6 +29,8 @@ private:
   Ultrasonic *mUltrasonic;
   Tof *mTof;
   StartButton *mStartButton;
+
+  int Rcount = 0, Lcount = 0, count = 0;
 };
 
 #endif // ROBOT_H
