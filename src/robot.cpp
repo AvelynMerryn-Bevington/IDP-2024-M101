@@ -3,6 +3,8 @@
 #include <Arduino_LSM6DS3.h>
 #include "DFRobot_VL53L0X.h"
 
+#include "motors.h"
+
 void Robot::Init()
 {
   Serial.begin(9600);
@@ -54,27 +56,27 @@ void Robot::SetInitialSpeed()
   mMotors->SetSpeed(Motors::Location::Right, 200);
   for (int loc = 0; loc < static_cast<int>(Motors::Location::Count); loc++)
   {
-    mMotors->Run(static_cast<Motors::Location>(loc), Motors::Direction::Backward); 
+    mMotors->Run(static_cast<Motors::Location>(loc), Motors::Direction::Forward); 
   }
 }
 
 void Robot::FollowLine()
 {
-  int Slow = 175, Fast = 200;
+  int Slow = 150, Fast = 200;
 
   bool LeftLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White);
   bool RightLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White);
   
   if (!LeftLineSensorWhite && RightLineSensorWhite){
-    mMotors->SetSpeed(Motors::Location(0), Fast);
-    mMotors->SetSpeed(Motors::Location(1), Slow);
+    mMotors->SetSpeed(Motors::Location::Left, Fast);
+    mMotors->SetSpeed(Motors::Location::Right, Slow);
   }
   else if(LeftLineSensorWhite && !RightLineSensorWhite){
-    mMotors->SetSpeed(Motors::Location(0), Slow);
-    mMotors->SetSpeed(Motors::Location(1), Fast);
+    mMotors->SetSpeed(Motors::Location::Left, Slow);
+    mMotors->SetSpeed(Motors::Location::Right, Fast);
   }
   else{
-    mMotors->SetSpeed(Motors::Location(0), Fast);
-    mMotors->SetSpeed(Motors::Location(1), Fast);
+    mMotors->SetSpeed(Motors::Location::Left, Fast);
+    mMotors->SetSpeed(Motors::Location::Right, Fast);
   }
 }

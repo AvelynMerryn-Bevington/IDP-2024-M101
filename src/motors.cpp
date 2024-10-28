@@ -87,7 +87,7 @@ void Motors::Turn(Turning direction)
   //stop motors
   motorleft->run(RELEASE);
   motorright->run(RELEASE);
-  delay(300);
+  delay(100);
 
   if (direction == Lefty) //left turn
   {
@@ -97,7 +97,7 @@ void Motors::Turn(Turning direction)
     //rotate for little bit (so the line sensors can leave the white line without complications)
     motorleft->setSpeed(200);
     motorright->setSpeed(200);
-    delay(300);
+    delay(800);
 
     //turn until line sensor detects line
     bool rotate = true;
@@ -108,7 +108,7 @@ void Motors::Turn(Turning direction)
       delay(10);
 
       //Test to see if line is detected
-      if (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White) {
+      if (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White) {
         rotate = false;
       } else {
         rotate = true;
@@ -126,7 +126,7 @@ void Motors::Turn(Turning direction)
     //rotate for little bit (so the line sensors can leave the white line without complications)
     motorleft->setSpeed(200);
     motorright->setSpeed(200);
-    delay(300);
+    delay(800);
 
     //turn until line sensor detects line
     bool rotate = true;
@@ -137,7 +137,7 @@ void Motors::Turn(Turning direction)
       delay(10);
 
       //Test to see if line is detected
-      if (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White) {
+      if (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White) {
         rotate = false;
       } else {
         rotate = true;
@@ -159,7 +159,7 @@ void Motors::Turn(Turning direction)
     //rotate for little bit (so the line sensors can leave the white line without complications)
     motorleft->setSpeed(200);
     motorright->setSpeed(200);
-    delay(300);
+    delay(800);
 
     //turn until line sensor detects line
     bool rotate = true;
@@ -170,7 +170,7 @@ void Motors::Turn(Turning direction)
       delay(10);
 
       //Test to see if line is detected
-      if (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White) {
+      if (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White) {
         rotate = false;
       } else {
         rotate = true;
@@ -185,7 +185,26 @@ void Motors::Turn(Turning direction)
 
 }
 
+void Motors::Shuffle()
+{
+  Adafruit_DCMotor *motorleft = GetMotor(Left);
+  Adafruit_DCMotor *motorright = GetMotor(Right);
 
+  uint8_t i;
+
+  //stop motors
+  //motorleft->run(RELEASE);
+  //motorright->run(RELEASE);
+  //delay(100);
+
+  motorleft->run(FORWARD); //-----CHANGE TO FORWARD
+  motorright->run(FORWARD);
+
+  motorleft->setSpeed(200);
+  motorright->setSpeed(200);
+  delay(100);
+
+}
 
 
 
