@@ -30,12 +30,11 @@ void Robot::Loop()
 {
   //Blue LED code
   FollowLine();
-  /*
   if (!Junction){
-    FollowLine();
     Junction = (mLineSensors->Read(LineSensors::Location::WideLeft) || mLineSensors->Read(LineSensors::Location::WideRight));
   } 
   else{
+    FinishedTurn = false;
     if(Route[Count] == Mapping::Direction::Left){
       mMotors->Turn(Motors::Turning::Lefty);
     } 
@@ -46,8 +45,9 @@ void Robot::Loop()
     Junction = (mLineSensors->Read(LineSensors::Location::WideLeft) || mLineSensors->Read(LineSensors::Location::WideRight));
     if(Junction == false){
       Count += 1;
+      FinishedTurn = true;
     }
-  }*/
+  }
 }
 
 void Robot::SetInitialSpeed()

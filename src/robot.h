@@ -24,7 +24,7 @@ private:
   void Navigation();
 
   int Count = 0;
-  bool Junction = true;
+  bool Junction = true, FinishedTurn = true;
   std::array<Mapping::Direction, 10> Route;
 
   enum Purpose{
