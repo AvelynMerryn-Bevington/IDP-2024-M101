@@ -55,9 +55,10 @@ void Claw::ServoDrop()
   delay(3000);
 }
 
-void Claw::ServoPickup() //-----------> CONSIDER writing in ultrasonicboxcheck() functionality, and a pinch-to-unpinch... 
+bool Claw::ServoPickup() //-----------> CONSIDER writing in ultrasonicboxcheck() functionality, and a pinch-to-unpinch... 
                          //...sequence to move the box into the right position for the ultrasonic
 //pinches and lifts claw arm
+//Returns whether box is contaminated
 {
   Servo servolift,servopinch;
   servolift = GetServo(Lift);
@@ -68,7 +69,7 @@ void Claw::ServoPickup() //-----------> CONSIDER writing in ultrasonicboxcheck()
   delay(3000);
 
   //LED sequence for contamination
-  TrashDetectionSeq();
+  bool Contaminated = TrashDetectionSeq();
 
   servolift.write(0); //lift box off the ground
   delay(2000);
@@ -76,6 +77,8 @@ void Claw::ServoPickup() //-----------> CONSIDER writing in ultrasonicboxcheck()
   //turn off contamination detection LEDs
   mLeds->Set(PIN_CONTAMINATION_LED,false);
   mLeds->Set(PIN_NO_CONTAMINATION_LED,false);
+
+  return Contaminated;
 }
 
 
@@ -91,9 +94,10 @@ bool Claw::ReadMagnetic() //-> used in TrashDetectionSeq command
   }
 }
 
-void Claw::TrashDetectionSeq() //-> used during ServoPickup command
+bool Claw::TrashDetectionSeq() //-> used during ServoPickup command
 //turns on LED if is magnetic 
 {
   mLeds->Set(PIN_CONTAMINATION_LED,ReadMagnetic());
   mLeds->Set(PIN_NO_CONTAMINATION_LED,!ReadMagnetic());
+  return ReadMagnetic();
 }

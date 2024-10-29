@@ -16,11 +16,11 @@ public:
   Claw();
 
   void ServoDrop();
-  void ServoPickup();
+  bool ServoPickup();
 
 private:
   Servo GetServo(Purpose pur);
-  void TrashDetectionSeq();
+  bool TrashDetectionSeq();
   bool ReadMagnetic();
 
   Leds *mLeds;
