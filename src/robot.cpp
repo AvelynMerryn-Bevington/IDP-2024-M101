@@ -36,6 +36,12 @@ void Robot::Loop()
   if (mLineSensors->Read(LineSensors::Location::WideLeft) == LineSensors::Background::White) {    LLS = true; } else {    LLS = false;  };
 
   if (RLS == true || LLS == true) {
+
+    mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
+    mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
+    delay(500);
+
+
     if (count == 2) {
       mMotors->Turn(Motors::Turning::Righty);
     }
@@ -61,9 +67,8 @@ void Robot::Loop()
       count += 1;
     }
     
-    Serial.print(Lcount);
-    Serial.print("+");
-    Serial.println(Rcount);
+    Serial.println(count);
+
 
   }
   
@@ -85,22 +90,23 @@ void Robot::SetInitialSpeed()
 
 void Robot::FollowLine()
 {
-  int Slow = 0, Fast = 200;
+  int Slow = 150, Fast = 200;
 
 
   bool LeftLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White);
   bool RightLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White);
   
   if (!LeftLineSensorWhite && RightLineSensorWhite){
-    mMotors->SetSpeed(Motors::Location(0), Fast);
-    mMotors->SetSpeed(Motors::Location(1), Slow);
+    mMotors->SetSpeed(Motors::Location::Left, Fast);
+    mMotors->SetSpeed(Motors::Location::Right, Slow);
   }
   else if(LeftLineSensorWhite && !RightLineSensorWhite){
-    mMotors->SetSpeed(Motors::Location(0), Slow);
-    mMotors->SetSpeed(Motors::Location(1), Fast);
+    mMotors->SetSpeed(Motors::Location::Left, Slow);
+    mMotors->SetSpeed(Motors::Location::Right, Fast);
   }
   else{
-    mMotors->SetSpeed(Motors::Location(0), Fast);
-    mMotors->SetSpeed(Motors::Location(1), Fast);
+    mMotors->SetSpeed(Motors::Location::Left, Fast);
+    mMotors->SetSpeed(Motors::Location::Right, Fast);
   }
 }
+

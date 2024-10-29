@@ -51,7 +51,7 @@ void Claw::ServoDrop()
   delay(1000);
   servolift.write(40); 
   delay(2000);
-  servopinch.write(90);
+  servopinch.write(180);
   delay(3000);
 }
 
@@ -64,7 +64,7 @@ void Claw::ServoPickup() //-----------> CONSIDER writing in ultrasonicboxcheck()
   servopinch = GetServo(Pinch);
 
   delay(1000);
-  servopinch.write(125);//clamp ------> if each clamp loosens the servo, we can make it so that every following clamp squeezes more: pos = (150-10*x) or something
+  servopinch.write(140);//clamp ------> if each clamp loosens the servo, we can make it so that every following clamp squeezes more: pos = (150-10*x) or something
   delay(3000);
 
   //LED sequence for contamination
