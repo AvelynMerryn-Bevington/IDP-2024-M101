@@ -32,7 +32,7 @@ class Mapping
 
     private:
     std::map<std::array<Mapping::Node, 2>, std::array<Mapping::Direction, 10>> DirectionMap { 
-        { {Start, Factory1}, {Forward, Forward, Left, Forward,Right, Forward, Right, Forward, Right, End}},
+        { {Start, Factory1}, {Forward, Forward, Left, Forward, Right, Forward, Right, Forward, Right, End}},
         //{ {Start, Factory2}, {Forward, Left, Forward,Right, Right, Forward, Forward, Left, Left, End}},
         { {Factory1, Factory2}, {Left, Left, Right, End, End, End, End, End, End, End}},
         { {Factory1, ContaminationSite}, {Right, Right, Forward, Forward, End, End, End, End, End, End}},

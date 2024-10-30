@@ -28,14 +28,15 @@ private:
   };
 
   int RouteCount = 0, BoxDeliveredCount = 0;
-  bool Junction = true, ReadyForTurn = true;
+  bool Junction = false, ReadyForTurn = true;
   std::array<Mapping::Direction, 10> Route;
   Robot::Purpose CurrentPurpose = FetchingBox;
   Mapping::Node CurrentDestination, CurrentLocation;
 
   void SetInitialSpeed();
-  void FollowLine();
+  void FollowLine(int Slow, int Fast);
   bool CheckForJunction();
+  void ChangingPurpose();
   std::array<Mapping::Direction, 10> Robot::SelectingDestination(bool Contaminated);
 
   Motors *mMotors;

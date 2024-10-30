@@ -23,21 +23,29 @@ void Robot::Init()
   while(!mStartButton->Read()){}
 
   Route = mMapping->FetchRoute(Mapping::Node::Start, Mapping::Node::Factory1);
-  SetInitialSpeed();
+  //SetInitialSpeed();
 }
 
 void Robot::Loop()
 {
+  mClaw->ServoPickup();
   //Blue LED code
-  FollowLine();
-  CheckForJunction();
+  /*FollowLine(150, 200);
   
   if (!Junction){
-    Junction = (mLineSensors->Read(LineSensors::Location::WideLeft) || mLineSensors->Read(LineSensors::Location::WideRight));
+    Junction = CheckForJunction();
   } 
   else{
     //Turn Left or Right or neither depending on next direction on Route
     if (ReadyForTurn){
+      //Stop at each junction so we know when the line sensors fail
+
+      mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
+      mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
+      delay(250);
+      mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
+      mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
+
       if(Route[RouteCount] == Mapping::Direction::Left){
         mMotors->Turn(Motors::Turning::Lefty);
       } 
@@ -46,6 +54,7 @@ void Robot::Loop()
       }
       ReadyForTurn = false;
     }
+    
     //To be changed if code for Turn() is made loopable
     //Check for junction, if junction is no longer detected we know that we have left it successfully
     Junction = CheckForJunction();
@@ -54,12 +63,22 @@ void Robot::Loop()
       ReadyForTurn = true;
 
       if (Route[RouteCount] == Mapping::Direction::End){
+        Serial.println("End Of Route");
+        mLeds->SetMoving(true);
+        delay(1000);
+        mLeds->SetMoving(false);
         //Code for dealing with destination
-        SelectingDestination();
-        //Set Destination 
+
+
+        //Turn around and PickNewRoute
+        mMotors->Turn(Motors::Turning::About);
+        ChangingPurpose();
+        Route = SelectingDestination(false);
+        RouteCount = 0;
+        
       }
     }
-  }
+  }*/
 }
 
 void Robot::SetInitialSpeed()
@@ -72,11 +91,8 @@ void Robot::SetInitialSpeed()
   }
 }
 
-void Robot::FollowLine()
+void Robot::FollowLine(int Slow = 150, int Fast = 200)
 {
-  int Slow = 150, Fast = 200; //numbers that worked: 150 and 200
-
-
   bool LeftLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White);
   bool RightLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White);
   
@@ -103,6 +119,21 @@ bool Robot::CheckForJunction()
 
   return(LeftWideSensorWhite || RightWideSensorWhite);
 }
+
+void Robot::ChangingPurpose()
+{
+  //Updating the purpose of the robot with next task to complete CurrentDestination is the Location at time of this function
+  if (CurrentDestination == Mapping::Node::Factory1){
+    CurrentPurpose = Robot::Purpose::CarryingBox;
+  } 
+  else if (BoxDeliveredCount < 13){
+    CurrentPurpose = Robot::Purpose::FetchingBox;
+  } 
+  else{
+    CurrentPurpose = Robot::Purpose::ReturningToStart;
+  }
+}
+
 
 std::array<Mapping::Direction, 10> Robot::SelectingDestination(bool Contaminated = false)
 {

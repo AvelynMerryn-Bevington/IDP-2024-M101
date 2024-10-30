@@ -84,7 +84,7 @@ void Motors::Turn(Turning direction)
 
   uint8_t i;
 
-  long buffer_period = 2500, buffer_speed = 100, iterating_speed = 100;
+  long buffer_period = 500, buffer_speed = 200, iterating_speed = 200;
 
   //stop motors
   motorleft->run(RELEASE);
@@ -117,9 +117,8 @@ void Motors::Turn(Turning direction)
       }
     }
     //extra delay to get the car parallel with line
-    delay(300);
-    motorleft->run(RELEASE);
-    motorright->run(RELEASE);
+    motorleft->run(FORWARD);
+    motorright->run(FORWARD);
 
   } 
   else if (direction == Righty) //right turn
@@ -148,9 +147,8 @@ void Motors::Turn(Turning direction)
       }
     }
     //extra delay to get the car parallel with line
-    delay(300);
-    motorleft->run(RELEASE);
-    motorright->run(RELEASE);
+    motorleft->run(FORWARD);
+    motorright->run(FORWARD);
 
   }
   
@@ -183,8 +181,8 @@ void Motors::Turn(Turning direction)
       }
       
     }
-    motorleft->run(RELEASE);
-    motorright->run(RELEASE);
+    motorleft->run(FORWARD);
+    motorright->run(FORWARD);
 
   } else if (direction == Lefty1) //left turn with straight line ahead
   {
@@ -212,9 +210,8 @@ void Motors::Turn(Turning direction)
       }
     }
     //extra delay to get the car parallel with line
-    delay(300);
-    motorleft->run(RELEASE);
-    motorright->run(RELEASE);
+    motorleft->run(FORWARD);
+    motorright->run(FORWARD);
 
   } else if (direction == Righty1) //left turn with straight line ahead
   {
@@ -242,9 +239,8 @@ void Motors::Turn(Turning direction)
       }
     }
     //extra delay to get the car parallel with line
-    delay(300);
-    motorleft->run(RELEASE);
-    motorright->run(RELEASE);
+    motorleft->run(FORWARD);
+    motorright->run(FORWARD);
 
   } 
   //Consider writing in the followline() code into the end of the turn function -> speak to Kerry
@@ -268,7 +264,6 @@ void Motors::Shuffle()
 
   motorleft->setSpeed(200);
   motorright->setSpeed(200);
-  delay(200);
 
 }
 
