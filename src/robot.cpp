@@ -28,6 +28,8 @@ void Robot::Init()
 
 void Robot::Loop()
 {
+  mLeds->Loop();
+
   FollowLine(150, 200);
   
   if (!Junction){

@@ -14,8 +14,25 @@ Leds::Leds()
   pinMode(PIN_NO_CONTAMINATION_LED, OUTPUT);
   pinMode(PIN_DRIVING_STATUS_LED, OUTPUT);
   
+  mMoving = false;
+  mMovingOn = false;
+  mMovingFlashMillis = 0;
+
   Serial.println("Done!");
   Serial.flush();
+}
+
+void Leds::Loop()
+{
+  if (!mMoving)
+    return;
+
+  if (mMovingFlashMillis > millis())
+    return;
+
+  mMovingFlashMillis = millis() + 500;
+  mMovingOn = !mMovingOn;
+  Set(PIN_DRIVING_STATUS_LED, mMovingOn);
 }
 
 void Leds::Set(int Led, bool isOn)
@@ -31,10 +48,8 @@ void Leds::SetCarrying(bool carrying, bool contaminated)
 
 void Leds::SetMoving(bool moving)
 {
+  mMoving = moving;
+  mMovingOn = moving;
+  mMovingFlashMillis = millis() + 500;
   Set(PIN_DRIVING_STATUS_LED, moving);
-}
-
-void Leds::BlueFlash()
-{
-  Set(PIN_DRIVING_STATUS_LED, true);
 }
