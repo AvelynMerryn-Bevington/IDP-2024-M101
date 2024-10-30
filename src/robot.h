@@ -18,20 +18,25 @@ public:
   void Init();
   void Loop();
 
+  
+
 private:
-  void SetInitialSpeed();
-  void FollowLine();
-  void Navigation();
-
-  int Count = 0;
-  bool Junction = true, FinishedTurn = true;
-  std::array<Mapping::Direction, 10> Route;
-
   enum Purpose{
     CarryingBox,
     FetchingBox,
     ReturningToStart
   };
+
+  int RouteCount = 0, BoxDeliveredCount = 0;
+  bool Junction = true, ReadyForTurn = true;
+  std::array<Mapping::Direction, 10> Route;
+  Robot::Purpose CurrentPurpose = FetchingBox;
+  Mapping::Node CurrentDestination, CurrentLocation;
+
+  void SetInitialSpeed();
+  void FollowLine();
+  bool CheckForJunction();
+  std::array<Mapping::Direction, 10> Robot::SelectingDestination(bool Contaminated);
 
   Motors *mMotors;
   Leds *mLeds;
