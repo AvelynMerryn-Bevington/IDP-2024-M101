@@ -4,7 +4,7 @@
 
 class Mapping
 {
-    public:
+public:
     enum Node{
         Start, 
         Factory1,
@@ -30,7 +30,7 @@ class Mapping
 
     std::array<Mapping::Direction, 10> FetchRoute(Mapping::Node, Mapping::Node);
 
-    private:
+private:
     std::map<std::array<Mapping::Node, 2>, std::array<Mapping::Direction, 10>> DirectionMap { 
         { {Start, Factory1}, {Forward, Forward, Left, Forward, Right, Forward, Right, Forward, Right, End}},
         //{ {Start, Factory2}, {Forward, Left, Forward,Right, Right, Forward, Forward, Left, Left, End}},
