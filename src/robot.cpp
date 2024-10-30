@@ -4,6 +4,7 @@
 #include "DFRobot_VL53L0X.h"
 
 #include "motors.h"
+#include "claw.h"
 
 void Robot::Init()
 {
@@ -39,7 +40,7 @@ void Robot::Loop()
 
     mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
     mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
-    delay(500);
+    //delay(500);
 
 
     if (count == 2) {
@@ -48,8 +49,11 @@ void Robot::Loop()
     if (count == 3 || count == 4 || count == 5 || count == 7 || count == 0 || count == 1 ) {
       //pass
     }
-    if (count == 6 || count == 8 || count == 9) {
+    if (count == 6 || count == 8 ) {
       mMotors->Turn(Motors::Turning::Lefty);
+    }
+    if (count == 9) {
+      mMotors->Turn(Motors::Turning::Lefty1);
     }
 
 
@@ -66,8 +70,27 @@ void Robot::Loop()
     if (RLS == true || LLS == true) {
       count += 1;
     }
-    
     Serial.println(count);
+
+    //------To perform AFTER robot comes off line (i.e. completes turn)
+
+    if (count == 9) { //go forward and pickup box
+      FollowLine();
+      delay(300);
+      FollowLine;
+      delay(300);
+      
+      mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
+      mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
+      delay(500);
+      mClaw->ServoPickup();
+      
+      Serial.println("SERVO PICKUP");
+
+      mMotors->Turn(Motors::Turning::Left);
+
+    }
+    
 
 
   }
@@ -90,7 +113,7 @@ void Robot::SetInitialSpeed()
 
 void Robot::FollowLine()
 {
-  int Slow = 150, Fast = 200;
+  int Slow = 150, Fast = 200; //numbers that worked: 150 and 200
 
 
   bool LeftLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White);
