@@ -41,13 +41,13 @@ private:
 
   Motors *mMotors;
   Leds *mLeds;
-  Claw *mClaw;
   Imu *mImu;
   LineSensors *mLineSensors;
   Ultrasonic *mUltrasonic;
   Tof *mTof;
   StartButton *mStartButton;
   Mapping *mMapping;
+  Claw *mClaw;
 };
 
 #endif // ROBOT_H

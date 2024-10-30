@@ -12,25 +12,25 @@ void Robot::Init()
 
   mMotors = new Motors;
   mLeds = new Leds;
-  mClaw = new Claw;
   mImu = new Imu;
   mLineSensors = new LineSensors;
   mUltrasonic = new Ultrasonic;
   mTof = new Tof;
   mStartButton = new StartButton;
   mMapping = new Mapping;
+  mClaw = new Claw;
 
   while(!mStartButton->Read()){}
 
   Route = mMapping->FetchRoute(Mapping::Node::Start, Mapping::Node::Factory1);
-  //SetInitialSpeed();
+  SetInitialSpeed();
 }
 
 void Robot::Loop()
 {
-  mClaw->ServoPickup();
+  
   //Blue LED code
-  /*FollowLine(150, 200);
+  FollowLine(150, 200);
   
   if (!Junction){
     Junction = CheckForJunction();
@@ -78,7 +78,7 @@ void Robot::Loop()
         
       }
     }
-  }*/
+  }
 }
 
 void Robot::SetInitialSpeed()
