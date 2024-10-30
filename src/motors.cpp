@@ -59,8 +59,6 @@ void Motors::Run(const Location loc, const Direction direction)
 }
 
 void Motors::SetSpeed(const Location loc, const uint8_t speed)
-//input (which motor? , speed)
-//sets the speed of the motor. Use mmotor->run() command to activate motor
 {
   Adafruit_DCMotor *motor = GetMotor(loc);
 

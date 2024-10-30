@@ -11,7 +11,7 @@ Ultrasonic::Ultrasonic()
     pinMode(PIN_ULTRASONIC_SENSOR, INPUT);
 }
 
-float Ultrasonic::UltrasonicDistance()
+float Ultrasonic::Distance()
 {
     float distance, direct_reading;
 
@@ -24,26 +24,23 @@ float Ultrasonic::UltrasonicDistance()
     return distance;
 }
 
-bool Ultrasonic::UltrasonicBoxCheck()
-//Reads the average of 20 readings of the ultrasonic sensor over 2 seconds
-// if the average distance is less than x, it will return boolean true.
+bool Ultrasonic::BoxCheck()
 {
-    float distance, sum = 0, i;
-
-    for (i=0; i<20; i++) {
-        distance = UltrasonicDistance();
-        sum += distance;
-        delay(100); //adjust values after testing
+    float sum = 0;
+    const int ReadingCount = 20;
+    for (int i = 0; i < ReadingCount; i++)
+    {
+        sum += Distance();
+        delay(100);
     }
-    sum = distance/50;
+    const float Average = sum / ReadingCount;
 
-    if (sum <= 2.5 && sum > 0.0) { //adjust values after testing
-        return true;
-    } else if (sum > 2.5) {
-        return false;
-    } else {
+    if (Average < 0.0)
+    {
         Serial.println("ULTRASONIC READING ERROR");
         return false;
     }
 
+    const float CutoffDistance = 100.0;
+    return (Average <= CutoffDistance);
 }

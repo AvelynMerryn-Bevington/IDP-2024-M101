@@ -24,8 +24,6 @@ Imu::Imu()
   Serial.flush();
 }
 
-
-//Kerry: who wrote this function? Are we going to use it? ----> To do: write the output code, rather than to Serial
 void Imu::GetYawAngle()
 {
   float ax, ay, az;

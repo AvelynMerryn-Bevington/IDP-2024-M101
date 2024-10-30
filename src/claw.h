@@ -14,14 +14,10 @@ public:
   };
 
   Claw();
-
-  void ServoDrop();
-  bool ServoPickup();
+  void Drop();
+  bool Pickup();
 
 private:
-  bool TrashDetectionSeq();
-  bool ReadMagnetic();
-
   Servo *mPinchServo;
   Servo *mLiftServo;
   Leds *mLeds;

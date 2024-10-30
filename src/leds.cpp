@@ -6,7 +6,6 @@
 #include "m101_hardware_config.h"
 
 Leds::Leds()
-//Allocates pins as output/input
 {
   Serial.print("LED Setup...");
   Serial.flush();
@@ -24,7 +23,6 @@ void Leds::Set(int Led, bool isOn)
   digitalWrite(Led, isOn ? HIGH : LOW);
 }
 
-//Kerry: Whoever wrote these functions please contact me. I have questions about how we could use them during robot function
 void Leds::SetCarrying(bool carrying, bool contaminated)
 {
   Set(PIN_CONTAMINATION_LED, carrying && contaminated);
@@ -36,8 +34,7 @@ void Leds::SetMoving(bool moving)
   Set(PIN_DRIVING_STATUS_LED, moving);
 }
 
-void Leds::BlueFlash() //Kerry: Function not complete, still being worked on
+void Leds::BlueFlash()
 {
   Set(PIN_DRIVING_STATUS_LED, true);
-  delay(500);
 }

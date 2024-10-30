@@ -5,8 +5,8 @@ class Ultrasonic
 {
 public:
     Ultrasonic();
-    float UltrasonicDistance();
-    bool UltrasonicBoxCheck();
+    float Distance();
+    bool BoxCheck();
 
 };
 #endif // ULTRASONIC_H

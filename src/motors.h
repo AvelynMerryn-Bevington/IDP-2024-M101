@@ -21,7 +21,7 @@ public:
     Stopped
   };
 
-  enum Turning //Must be different string to enum Location
+  enum Turning
   {
     Righty,
     Lefty,
@@ -35,8 +35,8 @@ public:
   void Run(const Location loc, const Direction direction);
   void SetSpeed(const Location loc, const uint8_t speed);
   void AdjustSpeed(const Location loc, const int speedChange);
-  void Motors::Turn(Turning direction); //Does the "Motors::" text need to be in front of the "Turn" here?
-  void Motors::Shuffle();
+  void Turn(Turning direction);
+  void Shuffle();
 
 private:
   Adafruit_MotorShield mMotorShield;

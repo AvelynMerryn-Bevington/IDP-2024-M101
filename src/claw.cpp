@@ -23,35 +23,36 @@ Claw::Claw()
   mPinchServo->attach(PIN_SERVO_CLAW);
   Servo *mLiftServo = new Servo();
   mPinchServo->attach(PIN_SERVO_LIFT);
-  ServoDrop();
+  Drop();
 }
 
-void Claw::ServoDrop()
-//Drops the claw arm into default position
+void Claw::Drop()
 {
   delay(1000);
+
+  // Lower box to the ground
   mLiftServo->write(40); 
   delay(2000);
+
+  // Release box
   mPinchServo->write(180);
   delay(3000);
 
-  //turn off contamination detection LEDs
   mLeds->SetCarrying(false, false);
 }
 
-bool Claw::ServoPickup() //-----------> CONSIDER writing in ultrasonicboxcheck() functionality, and a pinch-to-unpinch... 
-                         //...sequence to move the box into the right position for the ultrasonic
-//pinches and lifts claw arm
-//Returns whether box is contaminated
+bool Claw::Pickup()
 {
   delay(1000);
-  mPinchServo->write(140);//clamp ------> if each clamp loosens the servo, we can make it so that every following clamp squeezes more: pos = (150-10*x) or something
+  
+  // Grab box
+  mPinchServo->write(140);
   delay(3000);
 
-  mLiftServo->write(0); //lift box off the ground
+  // Lift box off the ground
+  mLiftServo->write(0);
   delay(2000);
 
-  //turn off contamination detection LEDs
   bool contaminated = (digitalRead(PIN_MAGNETIC_SENSOR) == HIGH);
   mLeds->SetCarrying(true, contaminated);
 
