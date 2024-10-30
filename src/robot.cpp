@@ -150,15 +150,12 @@ std::array<Mapping::Direction, 10> Robot::SelectingDestination(bool Contaminated
 
 void Robot::Turn(Turning direction)
 {
-  const int buffer_period = 500;
-  const int speed = 200;
-
   mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
   mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
 
-  mMotors->SetSpeed(Motors::Location::Left, speed);
-  mMotors->SetSpeed(Motors::Location::Right, speed);
-  delay(buffer_period);
+  mMotors->SetSpeed(Motors::Location::Left, 200);
+  mMotors->SetSpeed(Motors::Location::Right, 200);
+  delay(500);
 
   LineSensors::Location readLocation;
   switch (direction)
