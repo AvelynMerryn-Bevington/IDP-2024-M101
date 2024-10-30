@@ -3,6 +3,7 @@
 #include <Arduino_LSM6DS3.h>
 #include "DFRobot_VL53L0X.h"
 #include "motors.h"
+#include "claw.h"
 
 void Robot::Init()
 {
@@ -73,7 +74,8 @@ void Robot::SetInitialSpeed()
 
 void Robot::FollowLine()
 {
-  int Slow = 150, Fast = 200;
+  int Slow = 150, Fast = 200; //numbers that worked: 150 and 200
+
 
   bool LeftLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White);
   bool RightLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White);

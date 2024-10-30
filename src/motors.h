@@ -25,7 +25,9 @@ public:
   {
     Righty,
     Lefty,
-    About
+    About,
+    Lefty1,
+    Righty1
   };
 
   Motors();

@@ -53,7 +53,7 @@ void Motors::Run(const Location loc, const Direction direction)
     break;
 
   case Stopped:
-    motor->run(BRAKE);
+    motor->run(RELEASE);
     break;
   }
 }
@@ -84,6 +84,8 @@ void Motors::Turn(Turning direction)
 
   uint8_t i;
 
+  long buffer_period = 2500, buffer_speed = 100, iterating_speed = 100;
+
   //stop motors
   motorleft->run(RELEASE);
   motorright->run(RELEASE);
@@ -95,16 +97,16 @@ void Motors::Turn(Turning direction)
     motorright->run(FORWARD);
 
     //rotate for little bit (so the line sensors can leave the white line without complications)
-    motorleft->setSpeed(200);
-    motorright->setSpeed(200);
-    delay(800);
+    motorleft->setSpeed(buffer_speed);
+    motorright->setSpeed(buffer_speed);
+    delay(buffer_period);
 
     //turn until line sensor detects line
     bool rotate = true;
     while (rotate == true) {
       //turn
-      motorleft->setSpeed(200);
-      motorright->setSpeed(200);
+      motorleft->setSpeed(iterating_speed);
+      motorright->setSpeed(iterating_speed);
       delay(10);
 
       //Test to see if line is detected
@@ -114,6 +116,8 @@ void Motors::Turn(Turning direction)
         rotate = true;
       }
     }
+    //extra delay to get the car parallel with line
+    delay(300);
     motorleft->run(RELEASE);
     motorright->run(RELEASE);
 
@@ -124,16 +128,16 @@ void Motors::Turn(Turning direction)
     motorright->run(BACKWARD);
 
     //rotate for little bit (so the line sensors can leave the white line without complications)
-    motorleft->setSpeed(200);
-    motorright->setSpeed(200);
-    delay(800);
+    motorleft->setSpeed(buffer_speed);
+    motorright->setSpeed(buffer_speed);
+    delay(buffer_period);
 
     //turn until line sensor detects line
     bool rotate = true;
     while (rotate == true) {
       //turn
-      motorleft->setSpeed(200);
-      motorright->setSpeed(200);
+      motorleft->setSpeed(iterating_speed);
+      motorright->setSpeed(iterating_speed);
       delay(10);
 
       //Test to see if line is detected
@@ -143,6 +147,8 @@ void Motors::Turn(Turning direction)
         rotate = true;
       }
     }
+    //extra delay to get the car parallel with line
+    delay(300);
     motorleft->run(RELEASE);
     motorright->run(RELEASE);
 
@@ -157,16 +163,16 @@ void Motors::Turn(Turning direction)
     motorright->run(FORWARD);
 
     //rotate for little bit (so the line sensors can leave the white line without complications)
-    motorleft->setSpeed(200);
-    motorright->setSpeed(200);
-    delay(800);
+    motorleft->setSpeed(buffer_speed);
+    motorright->setSpeed(buffer_speed);
+    delay(buffer_period);
 
     //turn until line sensor detects line
     bool rotate = true;
     while (rotate == true) {
       //turn
-      motorleft->setSpeed(200);
-      motorright->setSpeed(200);
+      motorleft->setSpeed(iterating_speed);
+      motorright->setSpeed(iterating_speed);
       delay(10);
 
       //Test to see if line is detected
@@ -180,7 +186,67 @@ void Motors::Turn(Turning direction)
     motorleft->run(RELEASE);
     motorright->run(RELEASE);
 
-  }
+  } else if (direction == Lefty1) //left turn with straight line ahead
+  {
+    motorleft->run(BACKWARD);
+    motorright->run(FORWARD);
+
+    //rotate for little bit (so the line sensors can leave the white line without complications)
+    motorleft->setSpeed(buffer_speed);
+    motorright->setSpeed(buffer_speed);
+    delay(buffer_period);
+
+    //turn until line sensor detects line
+    bool rotate = true;
+    while (rotate == true) {
+      //turn
+      motorleft->setSpeed(iterating_speed);
+      motorright->setSpeed(iterating_speed);
+      delay(10);
+
+      //Test to see if line is detected
+      if (mLineSensors->Read(LineSensors::Location::WideLeft) == LineSensors::Background::White) {
+        rotate = false;
+      } else {
+        rotate = true;
+      }
+    }
+    //extra delay to get the car parallel with line
+    delay(300);
+    motorleft->run(RELEASE);
+    motorright->run(RELEASE);
+
+  } else if (direction == Righty1) //left turn with straight line ahead
+  {
+    motorleft->run(FORWARD);
+    motorright->run(BACKWARD);
+
+    //rotate for little bit (so the line sensors can leave the white line without complications)
+    motorleft->setSpeed(buffer_speed);
+    motorright->setSpeed(buffer_speed);
+    delay(buffer_period);
+
+    //turn until line sensor detects line
+    bool rotate = true;
+    while (rotate == true) {
+      //turn
+      motorleft->setSpeed(iterating_speed);
+      motorright->setSpeed(iterating_speed);
+      delay(10);
+
+      //Test to see if line is detected
+      if (mLineSensors->Read(LineSensors::Location::WideLeft) == LineSensors::Background::White) {
+        rotate = false;
+      } else {
+        rotate = true;
+      }
+    }
+    //extra delay to get the car parallel with line
+    delay(300);
+    motorleft->run(RELEASE);
+    motorright->run(RELEASE);
+
+  } 
   //Consider writing in the followline() code into the end of the turn function -> speak to Kerry
 
 }
@@ -202,7 +268,7 @@ void Motors::Shuffle()
 
   motorleft->setSpeed(200);
   motorright->setSpeed(200);
-  delay(100);
+  delay(200);
 
 }
 
