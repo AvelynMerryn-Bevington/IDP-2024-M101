@@ -87,7 +87,7 @@ void Robot::Loop()
       
       Serial.println("SERVO PICKUP");
 
-      mMotors->Turn(Motors::Turning::Left);
+      mMotors->Turn(Motors::Turning::About);
 
     }
     

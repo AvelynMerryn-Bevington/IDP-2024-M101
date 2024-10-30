@@ -181,8 +181,9 @@ void Motors::Turn(Turning direction)
       } else {
         rotate = true;
       }
-      
     }
+    //extra delay to get the car parallel with line
+    delay(300);
     motorleft->run(RELEASE);
     motorright->run(RELEASE);
 
