@@ -3,6 +3,7 @@
 
 #include <Adafruit_MotorShield.h>
 #include "line_sensors.h"
+#include "leds.h"
 
 class Motors
 {
@@ -21,22 +22,11 @@ public:
     Stopped
   };
 
-  enum Turning
-  {
-    Righty,
-    Lefty,
-    About,
-    Lefty1,
-    Righty1
-  };
-
-  Motors();
+  Motors(Leds *leds);
 
   void Run(const Location loc, const Direction direction);
   void SetSpeed(const Location loc, const uint8_t speed);
   void AdjustSpeed(const Location loc, const int speedChange);
-  void Turn(Turning direction);
-  void Shuffle();
 
 private:
   Adafruit_MotorShield mMotorShield;
@@ -44,6 +34,7 @@ private:
   uint8_t mMotorSpeeds[Location::Count];
 
   LineSensors *mLineSensors;
+  Leds *mLeds;
 };
 
 #endif // MOTORS_H

@@ -18,6 +18,21 @@ public:
   void Init();
   void Loop();
 
+  enum Turning
+  {
+    Righty,
+    Lefty,
+    About,
+    Lefty1,
+    Righty1
+  };
+
+  void Turn(Turning direction);
+  void FollowLine(int Slow, int Fast);
+  bool CheckForJunction();
+  void ChangingPurpose();
+
+
 private:
   enum Purpose{
     CarryingBox,
@@ -32,9 +47,6 @@ private:
   Mapping::Node CurrentDestination, CurrentLocation;
 
   void SetInitialSpeed();
-  void FollowLine(int Slow, int Fast);
-  bool CheckForJunction();
-  void ChangingPurpose();
   std::array<Mapping::Direction, 10> Robot::SelectingDestination(bool Contaminated);
 
   Motors *mMotors;

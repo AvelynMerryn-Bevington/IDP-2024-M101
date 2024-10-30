@@ -10,8 +10,8 @@ void Robot::Init()
   Serial.begin(9600);
   while(!Serial){}
 
-  mMotors = new Motors;
   mLeds = new Leds;
+  mMotors = new Motors(mLeds);
   mImu = new Imu;
   mLineSensors = new LineSensors;
   mUltrasonic = new Ultrasonic;
@@ -28,70 +28,59 @@ void Robot::Init()
 
 void Robot::Loop()
 {
-  
-  //Blue LED code
   FollowLine(150, 200);
   
   if (!Junction){
     Junction = CheckForJunction();
-  } 
-  else{
-    //Turn Left or Right or neither depending on next direction on Route
-    if (ReadyForTurn){
-      //Stop at each junction so we know when the line sensors fail
+    return;
+  }
 
-      mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
-      mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
-      delay(250);
-      mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
-      mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
+  if (ReadyForTurn)
+  {
+    ReadyForTurn = false;
+  
+    mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
+    mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
+    delay(250);
+    mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
+    mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
 
-      if(Route[RouteCount] == Mapping::Direction::Left){
-        mMotors->Turn(Motors::Turning::Lefty);
-      } 
-      else if(Route[RouteCount] == Mapping::Direction::Right){
-        mMotors->Turn(Motors::Turning::Righty);
-      }
-      ReadyForTurn = false;
-    }
-    
-    //To be changed if code for Turn() is made loopable
-    //Check for junction, if junction is no longer detected we know that we have left it successfully
-    Junction = CheckForJunction();
-    if(Junction == false){
-      RouteCount += 1;
-      ReadyForTurn = true;
-
-      if (Route[RouteCount] == Mapping::Direction::End){
-        Serial.println("End Of Route");
-        mLeds->SetMoving(true);
-        delay(1000);
-        mLeds->SetMoving(false);
-        //Code for dealing with destination
-
-
-        //Turn around and PickNewRoute
-        mMotors->Turn(Motors::Turning::About);
-        ChangingPurpose();
-        Route = SelectingDestination(false);
-        RouteCount = 0;
-        
-      }
+    if(Route[RouteCount] == Mapping::Direction::Left){
+      Turn(Turning::Lefty);
+    } 
+    else if(Route[RouteCount] == Mapping::Direction::Right){
+      Turn(Turning::Righty);
     }
   }
+
+  Junction = CheckForJunction();
+  if (Junction)
+    return;
+
+  RouteCount += 1;
+  ReadyForTurn = true;
+  if (Route[RouteCount] != Mapping::Direction::End)
+    return;
+
+  Serial.println("End Of Route");
+  delay(1000);
+
+  Turn(Turning::About);
+  ChangingPurpose();
+  Route = SelectingDestination(false);
+  RouteCount = 0;
 }
 
 void Robot::SetInitialSpeed()
 {
-  mMotors->SetSpeed(Motors::Location::Left, 200);
-  mMotors->SetSpeed(Motors::Location::Right, 200);
   for (int loc = 0; loc < static_cast<int>(Motors::Location::Count); loc++)
   {
+    mMotors->SetSpeed(static_cast<Motors::Location>(loc), 200);
     mMotors->Run(static_cast<Motors::Location>(loc), Motors::Direction::Forward); 
   }
 }
 
-void Robot::FollowLine(int Slow = 150, int Fast = 200)
+void Robot::FollowLine(const int Slow = 150, const int Fast = 200)
 {
   bool LeftLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White);
   bool RightLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White);
@@ -114,24 +103,18 @@ void Robot::FollowLine(int Slow = 150, int Fast = 200)
 
 bool Robot::CheckForJunction()
 {
-  bool LeftWideSensorWhite = (mLineSensors->Read(LineSensors::Location::WideLeft) == LineSensors::Background::White);
-  bool RightWideSensorWhite = (mLineSensors->Read(LineSensors::Location::WideRight) == LineSensors::Background::White);
-
-  return(LeftWideSensorWhite || RightWideSensorWhite);
+  return ((mLineSensors->Read(LineSensors::Location::WideLeft) == LineSensors::Background::White) ||
+          (mLineSensors->Read(LineSensors::Location::WideRight) == LineSensors::Background::White));
 }
 
 void Robot::ChangingPurpose()
 {
-  //Updating the purpose of the robot with next task to complete CurrentDestination is the Location at time of this function
-  if (CurrentDestination == Mapping::Node::Factory1){
+  if (CurrentDestination == Mapping::Node::Factory1)
     CurrentPurpose = Robot::Purpose::CarryingBox;
-  } 
-  else if (BoxDeliveredCount < 13){
+  else if (BoxDeliveredCount < 13)
     CurrentPurpose = Robot::Purpose::FetchingBox;
-  } 
-  else{
+  else
     CurrentPurpose = Robot::Purpose::ReturningToStart;
-  }
 }
 
 
@@ -139,18 +122,83 @@ std::array<Mapping::Direction, 10> Robot::SelectingDestination(bool Contaminated
 {
   CurrentLocation = CurrentDestination;
 
-  if (CurrentPurpose == Robot::Purpose::ReturningToStart){
+  switch (CurrentPurpose)
+  {
+  case Robot::Purpose::ReturningToStart:
     CurrentDestination = Mapping::Node::Start;
-  }
-  else if (CurrentPurpose == Robot::Purpose::FetchingBox){
+    break;
+
+  case Robot::Purpose::FetchingBox:
     CurrentDestination = Mapping::Node::Factory1;
+    break;
+
+  case Robot::Purpose::CarryingBox:
+    if (Contaminated)
+      CurrentDestination = Mapping::Node::ContaminationSite;
+    else
+    {
+      CurrentDestination = Mapping::Node(6+BoxDeliveredCount);
+      BoxDeliveredCount += 1;
+    }
+    break;
   }
-  else if (CurrentPurpose == Robot::Purpose::CarryingBox && Contaminated){
-    CurrentDestination = Mapping::Node::ContaminationSite;
-  }
-  else{
-    CurrentDestination = Mapping::Node(6+BoxDeliveredCount);
-    BoxDeliveredCount += 1;
-  }
+
   return mMapping->FetchRoute(CurrentLocation, CurrentDestination);
+}
+
+void Robot::Turn(Turning direction)
+{
+  const int buffer_period = 500;
+  const int speed = 200;
+
+  mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
+  mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
+
+  mMotors->SetSpeed(Motors::Location::Left, speed);
+  mMotors->SetSpeed(Motors::Location::Right, speed);
+  delay(buffer_period);
+
+  LineSensors::Location readLocation;
+  switch (direction)
+  {
+  case Turning::Lefty:
+    mMotors->Run(Motors::Location::Left, Motors::Direction::Backward);
+    mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
+    readLocation = LineSensors::Location::MidRight;
+    break;
+
+  case Turning::Lefty1:
+    mMotors->Run(Motors::Location::Left, Motors::Direction::Backward);
+    mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
+    readLocation = LineSensors::Location::WideLeft;
+    break;
+
+  case Turning::Righty:
+    mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
+    mMotors->Run(Motors::Location::Right, Motors::Direction::Backward);
+    readLocation = LineSensors::Location::MidLeft;
+    break;
+
+  case Turning::Righty1:
+    mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
+    mMotors->Run(Motors::Location::Right, Motors::Direction::Backward);
+    readLocation = LineSensors::Location::WideLeft;
+    break;
+
+  case Turning::About:
+    mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
+    mMotors->Run(Motors::Location::Right, Motors::Direction::Backward);
+    readLocation = LineSensors::Location::MidRight;
+    break;
+  
+  default:
+    break;
+  }
+
+  while (mLineSensors->Read(readLocation) != LineSensors::Background::White) {
+    delay(10);
+  }
+
+  mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
+  mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
 }
