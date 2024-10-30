@@ -19,50 +19,24 @@ Claw::Claw()
   Serial.println("Done!");
   Serial.flush();
 
-  Servo servolift,servopinch;
-  servolift = GetServo(Lift);
-  servopinch = GetServo(Pinch);
-
-  delay(1000);
-  servolift.write(40); 
-  delay(2000);
-  servopinch.write(180);
-  delay(3000);
-}
-
-Servo Claw::GetServo(Purpose pur)
-//function allocates the pins of the arduino to the servos based on their intended purpose
-//input: (Lift/Pinch)
-//Returns Servo object which can be used in functions such as servolift.write(90)
-//output: Servo object - servolift/servopinch
-{
-  Servo servolift,servopinch;
-  switch (pur)
-  {
-  case Purpose::Lift:
-    
-    servolift.attach(PIN_SERVO_LIFT);
-    return servolift;
-
-  case Purpose::Pinch:
-
-    servopinch.attach(PIN_SERVO_CLAW);
-    return servopinch;
-  }
+  Servo *mPinchServo = new Servo();
+  mPinchServo->attach(PIN_SERVO_CLAW);
+  Servo *mLiftServo = new Servo();
+  mPinchServo->attach(PIN_SERVO_LIFT);
+  ServoDrop();
 }
 
 void Claw::ServoDrop()
 //Drops the claw arm into default position
 {
-  Servo servolift,servopinch;
-  servolift = GetServo(Lift);
-  servopinch = GetServo(Pinch);
-
   delay(1000);
-  servolift.write(40); 
+  mLiftServo->write(40); 
   delay(2000);
-  servopinch.write(180);
+  mPinchServo->write(180);
   delay(3000);
+
+  //turn off contamination detection LEDs
+  mLeds->SetCarrying(false, false);
 }
 
 bool Claw::ServoPickup() //-----------> CONSIDER writing in ultrasonicboxcheck() functionality, and a pinch-to-unpinch... 
@@ -70,44 +44,16 @@ bool Claw::ServoPickup() //-----------> CONSIDER writing in ultrasonicboxcheck()
 //pinches and lifts claw arm
 //Returns whether box is contaminated
 {
-  Servo servolift,servopinch;
-  servolift = GetServo(Lift);
-  servopinch = GetServo(Pinch);
-
   delay(1000);
-  servopinch.write(140);//clamp ------> if each clamp loosens the servo, we can make it so that every following clamp squeezes more: pos = (150-10*x) or something
+  mPinchServo->write(140);//clamp ------> if each clamp loosens the servo, we can make it so that every following clamp squeezes more: pos = (150-10*x) or something
   delay(3000);
 
-  //LED sequence for contamination
-  bool Contaminated = TrashDetectionSeq();
-
-  servolift.write(0); //lift box off the ground
+  mLiftServo->write(0); //lift box off the ground
   delay(2000);
 
   //turn off contamination detection LEDs
-  mLeds->Set(PIN_CONTAMINATION_LED,false);
-  mLeds->Set(PIN_NO_CONTAMINATION_LED,false);
+  bool contaminated = (digitalRead(PIN_MAGNETIC_SENSOR) == HIGH);
+  mLeds->SetCarrying(true, contaminated);
 
-  return Contaminated;
-}
-
-
-bool Claw::ReadMagnetic() //-> used in TrashDetectionSeq command
-//detects if magnetic sensor gets activated or not
-//returns boolean value (True if magnetic!)
-{
-  int val = digitalRead(PIN_MAGNETIC_SENSOR);
-  if (val == HIGH) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-bool Claw::TrashDetectionSeq() //-> used during ServoPickup command
-//turns on LED if is magnetic 
-{
-  mLeds->Set(PIN_CONTAMINATION_LED,ReadMagnetic());
-  mLeds->Set(PIN_NO_CONTAMINATION_LED,!ReadMagnetic());
-  return ReadMagnetic();
+  return contaminated;
 }

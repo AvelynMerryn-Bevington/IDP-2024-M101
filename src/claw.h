@@ -19,10 +19,11 @@ public:
   bool ServoPickup();
 
 private:
-  Servo GetServo(Purpose pur);
   bool TrashDetectionSeq();
   bool ReadMagnetic();
 
+  Servo *mPinchServo;
+  Servo *mLiftServo;
   Leds *mLeds;
 };
 
