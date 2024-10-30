@@ -18,6 +18,16 @@ Claw::Claw()
 
   Serial.println("Done!");
   Serial.flush();
+
+  Servo servolift,servopinch;
+  servolift = GetServo(Lift);
+  servopinch = GetServo(Pinch);
+
+  delay(1000);
+  servolift.write(40); 
+  delay(2000);
+  servopinch.write(180);
+  delay(3000);
 }
 
 Servo Claw::GetServo(Purpose pur)
