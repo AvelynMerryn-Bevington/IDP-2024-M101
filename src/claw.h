@@ -18,6 +18,8 @@ public:
   void ServoDrop();
   void ServoPickup();
 
+  int pinchopen = 45,pinchclosed = 8,liftup = 55,liftdown = 37;
+
 private:
   Servo GetServo(Purpose pur);
   void TrashDetectionSeq();
