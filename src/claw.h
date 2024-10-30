@@ -17,11 +17,12 @@ public:
 
   void ServoDrop();
   void ServoPickup();
+  Servo GetServo(Purpose pur);
 
-  int pinchopen = 45,pinchclosed = 8,liftup = 55,liftdown = 37;
+  int pinchopen = 45,pinchclosed = 12,liftup = 55,liftdown = 37;
 
 private:
-  Servo GetServo(Purpose pur);
+  
   void TrashDetectionSeq();
   bool ReadMagnetic();
 

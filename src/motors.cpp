@@ -84,7 +84,7 @@ void Motors::Turn(Turning direction)
 
   uint8_t i;
 
-  long buffer_period = 2500, buffer_speed = 100, iterating_speed = 100;
+  long buffer_period = 500, buffer_speed = 150, iterating_speed = 150;
 
   //stop motors
   motorleft->run(RELEASE);
@@ -117,7 +117,7 @@ void Motors::Turn(Turning direction)
       }
     }
     //extra delay to get the car parallel with line
-    delay(300);
+    //delay(300);
     motorleft->run(RELEASE);
     motorright->run(RELEASE);
 
@@ -148,7 +148,7 @@ void Motors::Turn(Turning direction)
       }
     }
     //extra delay to get the car parallel with line
-    delay(300);
+    //delay(300);
     motorleft->run(RELEASE);
     motorright->run(RELEASE);
 

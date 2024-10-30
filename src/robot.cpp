@@ -27,6 +27,26 @@ void Robot::Init()
 
 void Robot::Loop()
 {
+  //mClaw->ServoPickup();
+  //delay(4000);
+  Servo servolift,servopinch;
+  int pos;
+  //servolift = mClaw->GetServo(Claw::Purpose::Lift);
+  servopinch = mClaw->GetServo(Claw::Purpose::Pinch);
+
+
+  //pinch closed
+  for (pos = 45; pos >= 20; pos -= 1) {
+    servopinch.write(pos); // tell servo to go to position in variable 'pos'
+    delay(15); // waits 15 ms for the servo to reach the position
+    Serial.println("pinching!");
+  }
+  Serial.println("DONE");
+  digitalWrite(12, LOW);
+  //pinMode(12, INPUT);
+  delay(10000);
+
+  /*
   //SEQUENCE TO REPEAT IF WIDE SENSORS NOT ACTIVATED
   FollowLine();
 
@@ -74,10 +94,10 @@ void Robot::Loop()
 
     //------To perform AFTER robot comes off line (i.e. completes turn)
 
-    if (count == 9) { //go forward and pickup box
+    if (count == 10) { //go forward and pickup box
       FollowLine();
       delay(300);
-      FollowLine;
+      FollowLine();
       delay(300);
       
       mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
@@ -94,7 +114,7 @@ void Robot::Loop()
 
 
   }
-  
+  */
 }
 
 
@@ -109,6 +129,7 @@ void Robot::SetInitialSpeed()
   {
     mMotors->Run(static_cast<Motors::Location>(loc), Motors::Direction::Forward); 
   }
+
 }
 
 void Robot::FollowLine()

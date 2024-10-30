@@ -18,6 +18,15 @@ Claw::Claw()
 
   Serial.println("Done!");
   Serial.flush();
+
+  Servo servolift,servopinch;
+  servolift = GetServo(Lift);
+  servopinch = GetServo(Pinch);
+
+  
+  servolift.write(liftdown); 
+  servopinch.write(pinchopen);
+  delay(3000);
 }
 
 Servo Claw::GetServo(Purpose pur)
@@ -45,14 +54,21 @@ void Claw::ServoDrop()
 //Drops the claw arm into default position
 {
   Servo servolift,servopinch;
+  int pos;
   servolift = GetServo(Lift);
   servopinch = GetServo(Pinch);
 
   delay(1000);
-  servolift.write(liftdown); 
+  for (pos = liftup; pos >= liftdown; pos -= 1) {
+    servolift.write(pos); // tell servo to go to position in variable 'pos'
+    delay(15); // waits 15 ms for the servo to reach the position
+  }
   delay(2000);
-  servopinch.write(pinchopen);
-  delay(3000);
+  for (pos = pinchclosed; pos <= pinchopen; pos += 1) {
+    servopinch.write(pos); // tell servo to go to position in variable 'pos'
+    delay(15); // waits 15 ms for the servo to reach the position
+  }
+  delay(1000);
 }
 
 void Claw::ServoPickup() //-----------> CONSIDER writing in ultrasonicboxcheck() functionality, and a pinch-to-unpinch... 
@@ -60,18 +76,30 @@ void Claw::ServoPickup() //-----------> CONSIDER writing in ultrasonicboxcheck()
 //pinches and lifts claw arm
 {
   Servo servolift,servopinch;
+  int pos;
   servolift = GetServo(Lift);
   servopinch = GetServo(Pinch);
 
+
+  delay(4000);
+
+  //pinch closed
+  for (pos = pinchopen; pos >= pinchclosed; pos -= 1) {
+    servopinch.write(pos); // tell servo to go to position in variable 'pos'
+    delay(15); // waits 15 ms for the servo to reach the position
+    Serial.println("pinching!");
+  }
   delay(1000);
-  servopinch.write(pinchclosed);//clamp ------> if each clamp loosens the servo, we can make it so that every following clamp squeezes more: pos = (150-10*x) or something
-  delay(3000);
 
   //LED sequence for contamination
   TrashDetectionSeq();
 
-  servolift.write(liftup); //lift box off the ground
-  delay(2000);
+  //lift box off the ground
+  for (pos = liftdown; pos <= liftup; pos += 1) {
+    servolift.write(pos); // tell servo to go to position in variable 'pos'
+    delay(15); // waits 15 ms for the servo to reach the position
+  }
+  delay(1000);
 
   //turn off contamination detection LEDs
   mLeds->Set(PIN_CONTAMINATION_LED,false);
