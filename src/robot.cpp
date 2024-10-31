@@ -23,11 +23,16 @@ void Robot::Init()
   while(!mStartButton->Read()){}
 
   Route = mMapping->FetchRoute(Mapping::Node::Start, Mapping::Node::Factory1);
-  SetInitialSpeed();
+  //SetInitialSpeed();
+  mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
+  mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
 }
 
 void Robot::Loop()
 {
+  mClaw->Pickup();
+  mClaw->Drop();
+  /*
   mLeds->Loop();
 
   FollowLine(150, 200);
@@ -91,6 +96,7 @@ void Robot::Loop()
   ChangingPurpose();
   Route = SelectingDestination(false);
   RouteCount = 0;
+  */
 }
 
 void Robot::SetInitialSpeed()
