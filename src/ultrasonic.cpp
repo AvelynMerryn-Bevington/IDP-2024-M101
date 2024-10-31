@@ -31,7 +31,6 @@ bool Ultrasonic::BoxCheck()
     for (int i = 0; i < ReadingCount; i++)
     {
         sum += Distance();
-        delay(100);
     }
     const float Average = sum / ReadingCount;
 

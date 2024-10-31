@@ -19,6 +19,7 @@ public:
         Box3Left,
         Box3Right,
         Box4Middle,
+        NumNodes
     };
 
     enum Direction{

@@ -41,7 +41,7 @@ private:
   };
 
   int RouteCount = 0, BoxDeliveredCount = 0;
-  bool Junction = false, ReadyForTurn = true;
+  bool Junction = false, ReadyForTurn = true, ContaminatedBox;
   std::array<Mapping::Direction, 10> Route;
   Robot::Purpose CurrentPurpose = FetchingBox;
   Mapping::Node CurrentDestination, CurrentLocation;

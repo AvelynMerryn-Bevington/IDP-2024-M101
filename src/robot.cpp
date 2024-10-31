@@ -39,6 +39,7 @@ void Robot::Loop()
 
   if (ReadyForTurn)
   {
+    //To be changed if Turn() is made loopable
     ReadyForTurn = false;
   
     mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
@@ -64,9 +65,27 @@ void Robot::Loop()
   if (Route[RouteCount] != Mapping::Direction::End)
     return;
 
-  Serial.println("End Of Route");
-  delay(1000);
+  switch(CurrentPurpose)
+  {
+    case Purpose::CarryingBox:
+      if (ContaminatedBox)
+        delay(1000);
+      mMotors->SetSpeed(Motors::Location::Left, 0);
+      mMotors->SetSpeed(Motors::Location::Right, 0);
+      mClaw->Drop();
 
+    case Purpose::FetchingBox:
+      while (true){
+        FollowLine(100, 150);
+        if (mUltrasonic->BoxCheck())
+          break;
+    
+    case Purpose::ReturningToStart:
+      break;
+    }
+  }
+
+  CurrentLocation = CurrentDestination;
   Turn(Turning::About);
   ChangingPurpose();
   Route = SelectingDestination(false);
@@ -111,9 +130,9 @@ bool Robot::CheckForJunction()
 
 void Robot::ChangingPurpose()
 {
-  if (CurrentDestination == Mapping::Node::Factory1)
+  if (CurrentLocation == Mapping::Node::Factory1)
     CurrentPurpose = Robot::Purpose::CarryingBox;
-  else if (BoxDeliveredCount < 13)
+  else if (BoxDeliveredCount < Mapping::Node::NumNodes)
     CurrentPurpose = Robot::Purpose::FetchingBox;
   else
     CurrentPurpose = Robot::Purpose::ReturningToStart;
@@ -122,8 +141,6 @@ void Robot::ChangingPurpose()
 
 std::array<Mapping::Direction, 10> Robot::SelectingDestination(bool Contaminated = false)
 {
-  CurrentLocation = CurrentDestination;
-
   switch (CurrentPurpose)
   {
   case Robot::Purpose::ReturningToStart:
@@ -155,6 +172,8 @@ void Robot::Turn(Turning direction)
 
   mMotors->SetSpeed(Motors::Location::Left, 200);
   mMotors->SetSpeed(Motors::Location::Right, 200);
+  
+  //Is this delay necessary?
   delay(500);
 
   LineSensors::Location readLocation;
@@ -193,7 +212,11 @@ void Robot::Turn(Turning direction)
   default:
     break;
   }
-
+/*
+  while (mLineSensors->Read(readLocation) != LineSensors::Background::Black) {
+    delay(10);
+  }
+*/
   while (mLineSensors->Read(readLocation) != LineSensors::Background::White) {
     delay(10);
   }
