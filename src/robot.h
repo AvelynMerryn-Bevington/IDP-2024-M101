@@ -40,11 +40,15 @@ private:
     ReturningToStart
   };
 
-  int RouteCount = 0, BoxDeliveredCount = 0;
-  bool Junction = false, ReadyForTurn = true, ContaminatedBox;
+  int RouteCount = 0;
+  int BoxDeliveredCount = 0;
+  bool Junction = false;
+  bool ReadyForTurn = true;
+  bool ContaminatedBox;
   std::array<Mapping::Direction, 10> Route;
   Robot::Purpose CurrentPurpose = FetchingBox;
-  Mapping::Node CurrentDestination, CurrentLocation;
+  Mapping::Node CurrentDestination;
+  Mapping::Node CurrentLocation;
 
   void SetInitialSpeed();
   std::array<Mapping::Direction, 10> Robot::SelectingDestination(bool Contaminated);
