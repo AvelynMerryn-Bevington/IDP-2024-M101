@@ -2,10 +2,11 @@
 #include <Arduino.h>
 #include <Arduino_LSM6DS3.h>
 #include "DFRobot_VL53L0X.h"
+#include "line_sensors.h"
 
 #include "m101_hardware_config.h"
 
-Motors::Motors()
+Motors::Motors(Leds *leds)
 {
   Serial.print("Motors setup...");
   Serial.flush();
@@ -17,6 +18,7 @@ Motors::Motors()
     Serial.flush();
     while(true){} // Kill the whole entire program
   }
+
   Serial.println("Done!");
   Serial.flush();
 }
@@ -44,14 +46,17 @@ void Motors::Run(const Location loc, const Direction direction)
   {
   case Forward:
     motor->run(FORWARD);
+    mLeds->SetMoving(true);
     break;
 
   case Backward:
     motor->run(BACKWARD);
+    mLeds->SetMoving(true);
     break;
 
   case Stopped:
-    motor->run(BRAKE);
+    motor->run(RELEASE);
+    mLeds->SetMoving(false);
     break;
   }
 }
