@@ -38,7 +38,6 @@ private:
 //  | StartNode | EndNode            | Move 1 | Move 2 | Move 3 | Move 4 | Move 5 | Move 6 | Move 7 | Move 8 | Move 9 | ...
 //  | --------- | ------------------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ------ | ...
     {{Start,      Factory1         }, {Forward, Forward, Left,    Forward, Right,   Forward, Right,   Forward, Right}},
-    {{Start,      Factory2         }, {Forward, Left,    Forward, Right,   Right,   Forward, Forward, Left,    Left}},
     {{Factory1,   Box4Middle       }, {Left,    Forward, Left,    Forward, Left,    Forward}},
     {{Factory1,   ContaminationSite}, {Right,   Right,   Forward, Forward}},
     {{Factory1,   Box2Right        }, {Right,   Right,   Forward, Right}},
