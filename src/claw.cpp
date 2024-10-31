@@ -19,9 +19,9 @@ Claw::Claw()
   Serial.println("Done!");
   Serial.flush();
 
-  Servo *mPinchServo = new Servo();
+  mPinchServo = new Servo();
   mPinchServo->attach(PIN_SERVO_CLAW);
-  Servo *mLiftServo = new Servo();
+  mLiftServo = new Servo();
   mPinchServo->attach(PIN_SERVO_LIFT);
   Drop();
 }
