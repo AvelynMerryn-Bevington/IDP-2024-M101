@@ -20,9 +20,11 @@ Claw::Claw()
   Serial.flush();
 
   Servo *mPinchServo = new Servo();
+  mPinchServo->write(0);
   mPinchServo->attach(PIN_SERVO_CLAW);
   Servo *mLiftServo = new Servo();
-  mPinchServo->attach(PIN_SERVO_LIFT);
+  mLiftServo->write(37);
+  mLiftServo->attach(PIN_SERVO_LIFT);
   Drop();
 }
 
