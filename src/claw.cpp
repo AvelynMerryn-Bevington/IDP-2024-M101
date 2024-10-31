@@ -31,31 +31,6 @@ Claw::Claw()
 
   mLiftServo->detach();
   mLiftServo->detach();
-  /*
-
-  for (int pos = PinchClosed; pos >= PinchOpen; pos -= 1){
-    mPinchServo->write(pos);
-    Serial.println("Releasing");
-    delay(20);
-  }
-  delay(500);
-
-  for (int pos = LiftUp; pos >= LiftDown; pos -= 1){
-    mLiftServo->write(pos);
-    Serial.println("Dropping");
-    delay(20);
-  }
-  delay(500);
-*/
-/*
-  Serial.print("Pickup...");
-  Pickup();
-  Serial.println("Done");
-
-  Serial.print("Drop...");
-  Drop();
-  Serial.println("Done");
-*/
 }
 
 void Claw::Drop()
