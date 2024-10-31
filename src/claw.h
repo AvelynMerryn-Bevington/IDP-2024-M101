@@ -16,11 +16,17 @@ public:
   Claw();
   void Drop();
   bool Pickup();
+  
 
 private:
   Servo *mPinchServo;
   Servo *mLiftServo;
   Leds *mLeds;
+
+  int pinchclosed = 40;
+  int pinchopen = 0 ;
+  int liftup = 55;
+  int liftdown = 36;
 };
 
 #endif CLAW_H
