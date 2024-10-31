@@ -41,6 +41,7 @@ void Robot::Loop()
   {
     //To be changed if Turn() is made loopable
     ReadyForTurn = false;
+    Serial.print(Route[RouteCount]);
   
     mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
     mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
@@ -72,7 +73,7 @@ void Robot::Loop()
         delay(1000);
       mMotors->SetSpeed(Motors::Location::Left, 0);
       mMotors->SetSpeed(Motors::Location::Right, 0);
-      mClaw->Drop();
+      //mClaw->Drop();
 
     case Purpose::FetchingBox:
       while (true){
@@ -84,7 +85,7 @@ void Robot::Loop()
       break;
     }
   }
-
+  Serial.println("End");
   CurrentLocation = CurrentDestination;
   Turn(Turning::About);
   ChangingPurpose();
@@ -175,50 +176,55 @@ void Robot::Turn(Turning direction)
   
   //Is this delay necessary?
   delay(500);
+  Serial.print("Turning");
 
-  LineSensors::Location readLocation;
+  LineSensors::Location readLocation1, readLocation2;
   switch (direction)
   {
   case Turning::Lefty:
     mMotors->Run(Motors::Location::Left, Motors::Direction::Backward);
     mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
-    readLocation = LineSensors::Location::MidRight;
+    readLocation1 = LineSensors::Location::MidRight;
+    readLocation2 = LineSensors::Location::WideLeft;
     break;
-
+/*
   case Turning::Lefty1:
     mMotors->Run(Motors::Location::Left, Motors::Direction::Backward);
     mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
-    readLocation = LineSensors::Location::WideLeft;
+    readLocation1 = LineSensors::Location::WideLeft;
     break;
-
+*/
   case Turning::Righty:
     mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
     mMotors->Run(Motors::Location::Right, Motors::Direction::Backward);
-    readLocation = LineSensors::Location::MidLeft;
+    readLocation1 = LineSensors::Location::MidLeft;
+    readLocation2 = LineSensors::Location::WideRight;
     break;
-
+/*
   case Turning::Righty1:
     mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
     mMotors->Run(Motors::Location::Right, Motors::Direction::Backward);
     readLocation = LineSensors::Location::WideLeft;
     break;
-
+*/
   case Turning::About:
     mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
     mMotors->Run(Motors::Location::Right, Motors::Direction::Backward);
-    readLocation = LineSensors::Location::MidRight;
-    break;
-  
-  default:
+    readLocation1 = LineSensors::Location::MidRight;
+
+    while (mLineSensors->Read(readLocation1) != LineSensors::Background::White){
+      delay(10);
+      Serial.println("Stage2");
+    }
     break;
   }
-/*
-  while (mLineSensors->Read(readLocation) != LineSensors::Background::Black) {
+  while (mLineSensors->Read(readLocation1) != LineSensors::Background::Black && mLineSensors->Read(readLocation2) != LineSensors::Background::Black) {
     delay(10);
+    Serial.println("Stage1");
   }
-*/
-  while (mLineSensors->Read(readLocation) != LineSensors::Background::White) {
+  while (mLineSensors->Read(readLocation1) != LineSensors::Background::White && mLineSensors->Read(readLocation2) != LineSensors::Background::White) {
     delay(10);
+    Serial.println("Stage2");
   }
 
   mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
