@@ -4,23 +4,26 @@
 #include "DFRobot_VL53L0X.h"
 #include "ArxContainer.h"
 
-std::array<Mapping::Direction, 10> Mapping::FetchRoute(Mapping::Node StartNode, Mapping::Node EndNode)
+::std::vector<Mapping::Direction> Mapping::FetchRoute(Mapping::Node StartNode, Mapping::Node EndNode)
 {
   switch (StartNode)
   {
-  case Mapping::Node::Start:
-  case Mapping::Node::Factory1:
-  case Mapping::Node::Box4Middle:
-    return DirectionMap[std::array<Mapping::Node, 2>{StartNode, EndNode}];
+  case Node::Start:
+  case Node::Factory1:
+  case Node::Box4Middle:
+    return DirectionMap[::std::pair<Node, Node>{StartNode, EndNode}];
 
   default:
-    std::array<Mapping::Direction, 10> returnRoute = DirectionMap[std::array<Mapping::Node, 2>{EndNode, StartNode}];
-    for (int i = 0; i < 10; i++)
+    const ::std::vector<Direction> OutwardRoute = DirectionMap[::std::pair<Node, Node>{EndNode, StartNode}];
+    ::std::vector<Direction> returnRoute;
+    for (int i = static_cast<int>(OutwardRoute.size() - 1); i >= 0; i++)
     {
-      if (returnRoute[i] == Left)
-        returnRoute[i] = Right;
-      else if (returnRoute[i] == Right)
-        returnRoute[i] = Left;
+      if (OutwardRoute[i] == Right)
+        returnRoute.push_back(Left);
+      else if (OutwardRoute[i] == Left)
+        returnRoute.push_back(Right);
+      else
+        returnRoute.push_back(OutwardRoute[i]);
     }
     return returnRoute;
   }

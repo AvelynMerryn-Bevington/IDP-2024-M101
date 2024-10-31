@@ -48,10 +48,10 @@ void Robot::Loop()
     mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
     mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
 
-    if(mRoute[mRouteCount] == Mapping::Direction::Left){
+    if(mRoute[0] == Mapping::Direction::Left){
       Turn(Turning::Lefty);
     } 
-    else if(mRoute[mRouteCount] == Mapping::Direction::Right){
+    else if(mRoute[0] == Mapping::Direction::Right){
       Turn(Turning::Righty);
     }
   }
@@ -60,9 +60,9 @@ void Robot::Loop()
   if (mJunction)
     return;
 
-  mRouteCount += 1;
+  mRoute.erase(mRoute.begin());
   mReadyForTurn = true;
-  if (mRoute[mRouteCount] != Mapping::Direction::End)
+  if (!mRoute.empty())
     return;
 
   Serial.println("End Of Route");
@@ -71,7 +71,6 @@ void Robot::Loop()
   Turn(Turning::About);
   ChangingPurpose();
   mRoute = SelectingDestination(false);
-  mRouteCount = 0;
 }
 
 void Robot::SetInitialSpeed()
@@ -105,8 +104,6 @@ void Robot::FollowLine(const int Slow = 150, const int Fast = 200)
   }
 }
 
-
-
 bool Robot::CheckForJunction()
 {
   return ((mLineSensors->Read(LineSensors::Location::WideLeft) == LineSensors::Background::White) ||
@@ -117,14 +114,31 @@ void Robot::ChangingPurpose()
 {
   if (mCurrentDestination == Mapping::Node::Factory1)
     mCurrentPurpose = Robot::Purpose::CarryingBox;
-  else if (mBoxDeliveredCount < 13)
+  else if (mDeliveredBoxes.size() < 7)
     mCurrentPurpose = Robot::Purpose::FetchingBox;
   else
     mCurrentPurpose = Robot::Purpose::ReturningToStart;
 }
 
+Mapping::Node Robot::GetNextDeliveryNode()
+{
+  for (auto deliveryBay : DeliveryBays)
+  {
+    bool found = false;
+    for (auto bay : mDeliveredBoxes)
+    {
+      if (bay != deliveryBay)
+        continue;
+      found = true;
+      break;
+    }
 
-std::array<Mapping::Direction, 10> Robot::SelectingDestination(bool Contaminated = false)
+    if (!found)
+      return deliveryBay;
+  }
+}
+
+::std::vector<Mapping::Direction> Robot::SelectingDestination(bool Contaminated = false)
 {
   mCurrentLocation = mCurrentDestination;
 
@@ -142,10 +156,8 @@ std::array<Mapping::Direction, 10> Robot::SelectingDestination(bool Contaminated
     if (Contaminated)
       mCurrentDestination = Mapping::Node::ContaminationSite;
     else
-    {
-      mCurrentDestination = Mapping::Node(6 + mBoxDeliveredCount);
-      mBoxDeliveredCount += 1;
-    }
+      mCurrentDestination = GetNextDeliveryNode();
+      mDeliveredBoxes.push_back(mCurrentDestination);
     break;
   }
 

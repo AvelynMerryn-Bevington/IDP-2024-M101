@@ -1,5 +1,6 @@
 #ifndef MAPPING_H
 #define MAPPING_H
+
 #include "ArxContainer.h"
 
 class Mapping
@@ -26,26 +27,25 @@ public:
   {
     Forward,
     Left,
-    Right,
-    End
+    Right
   };
 
-  std::array<Mapping::Direction, 10> FetchRoute(Mapping::Node, Mapping::Node);
+  ::std::vector<Direction> FetchRoute(Node, Node);
 
 private:
-  std::map<std::array<Mapping::Node, 2>, std::array<Mapping::Direction, 10>> DirectionMap 
+  ::std::map<::std::pair<Node, Node>, ::std::vector<Direction>> DirectionMap 
   { 
-    { {Start, Factory1}, {Forward, Forward, Left, Forward, Right, Forward, Right, Forward, Right, End}},
-    //{ {Start, Factory2}, {Forward, Left, Forward,Right, Right, Forward, Forward, Left, Left, End}},
-    { {Factory1, Factory2}, {Left, Left, Right, End, End, End, End, End, End, End}},
-    { {Factory1, ContaminationSite}, {Right, Right, Forward, Forward, End, End, End, End, End, End}},
-    { {Factory1, Box1Right}, {Right, Right, Right, End, End, End, End, End, End, End}},
-    { {Factory1, Box1Left}, {Left, Left, Left, End, End, End, End, End, End, End}},
-    { {Factory1, Box2Right}, {Right, Right, Forward, Right, End, End, End, End, End, End}},
-    { {Factory1, Box3Right}, {Left, Left, Right, End, End, End, End, End, End, End}},
-    { {Factory1, Box3Left}, {Left, Forward, Left, Left, End, End, End, End, End, End}},
-    { {Factory1, Box4Middle}, {Left, Forward, Left, Forward, Left, Forward, End, End, End, End}},
-    { {Box4Middle, Start}, {Right, Forward, End, End, End, End, End, End, End, End}}
+    { {Start, Factory1}, {Forward, Forward, Left, Forward, Right, Forward, Right, Forward, Right}},
+    //{ {Start, Factory2}, {Forward, Left, Forward,Right, Right, Forward, Forward, Left, Left}},
+    { {Factory1, Factory2}, {Left, Left, Right}},
+    { {Factory1, ContaminationSite}, {Right, Right, Forward, Forward}},
+    { {Factory1, Box1Right}, {Right, Right, Right}},
+    { {Factory1, Box1Left}, {Left, Left, Left}},
+    { {Factory1, Box2Right}, {Right, Right, Forward, Right}},
+    { {Factory1, Box3Right}, {Left, Left, Right}},
+    { {Factory1, Box3Left}, {Left, Forward, Left, Left}},
+    { {Factory1, Box4Middle}, {Left, Forward, Left, Forward, Left, Forward}},
+    { {Box4Middle, Start}, {Right, Forward}}
   };
 };
 
