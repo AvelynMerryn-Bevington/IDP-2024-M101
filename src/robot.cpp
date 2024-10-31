@@ -22,7 +22,7 @@ void Robot::Init()
 
   while(!mStartButton->Read()){}
 
-  Route = mMapping->FetchRoute(Mapping::Node::Start, Mapping::Node::Factory1);
+  mRoute = mMapping->FetchRoute(Mapping::Node::Start, Mapping::Node::Factory1);
   SetInitialSpeed();
 }
 
@@ -32,14 +32,15 @@ void Robot::Loop()
 
   FollowLine(150, 200);
   
-  if (!Junction){
-    Junction = CheckForJunction();
+  if (!mJunction)
+  {
+    mJunction = CheckForJunction();
     return;
   }
 
-  if (ReadyForTurn)
+  if (mReadyForTurn)
   {
-    ReadyForTurn = false;
+    mReadyForTurn = false;
   
     mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
     mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
@@ -47,21 +48,21 @@ void Robot::Loop()
     mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
     mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
 
-    if(Route[RouteCount] == Mapping::Direction::Left){
+    if(mRoute[mRouteCount] == Mapping::Direction::Left){
       Turn(Turning::Lefty);
     } 
-    else if(Route[RouteCount] == Mapping::Direction::Right){
+    else if(mRoute[mRouteCount] == Mapping::Direction::Right){
       Turn(Turning::Righty);
     }
   }
 
-  Junction = CheckForJunction();
-  if (Junction)
+  mJunction = CheckForJunction();
+  if (mJunction)
     return;
 
-  RouteCount += 1;
-  ReadyForTurn = true;
-  if (Route[RouteCount] != Mapping::Direction::End)
+  mRouteCount += 1;
+  mReadyForTurn = true;
+  if (mRoute[mRouteCount] != Mapping::Direction::End)
     return;
 
   Serial.println("End Of Route");
@@ -69,8 +70,8 @@ void Robot::Loop()
 
   Turn(Turning::About);
   ChangingPurpose();
-  Route = SelectingDestination(false);
-  RouteCount = 0;
+  mRoute = SelectingDestination(false);
+  mRouteCount = 0;
 }
 
 void Robot::SetInitialSpeed()
@@ -87,15 +88,18 @@ void Robot::FollowLine(const int Slow = 150, const int Fast = 200)
   bool LeftLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White);
   bool RightLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White);
   
-  if (!LeftLineSensorWhite && RightLineSensorWhite){
+  if (!LeftLineSensorWhite && RightLineSensorWhite)
+  {
     mMotors->SetSpeed(Motors::Location::Left, Fast);
     mMotors->SetSpeed(Motors::Location::Right, Slow);
   }
-  else if(LeftLineSensorWhite && !RightLineSensorWhite){
+  else if(LeftLineSensorWhite && !RightLineSensorWhite)
+  {
     mMotors->SetSpeed(Motors::Location::Left, Slow);
     mMotors->SetSpeed(Motors::Location::Right, Fast);
   }
-  else{
+  else
+  {
     mMotors->SetSpeed(Motors::Location::Left, Fast);
     mMotors->SetSpeed(Motors::Location::Right, Fast);
   }
@@ -111,41 +115,41 @@ bool Robot::CheckForJunction()
 
 void Robot::ChangingPurpose()
 {
-  if (CurrentDestination == Mapping::Node::Factory1)
-    CurrentPurpose = Robot::Purpose::CarryingBox;
-  else if (BoxDeliveredCount < 13)
-    CurrentPurpose = Robot::Purpose::FetchingBox;
+  if (mCurrentDestination == Mapping::Node::Factory1)
+    mCurrentPurpose = Robot::Purpose::CarryingBox;
+  else if (mBoxDeliveredCount < 13)
+    mCurrentPurpose = Robot::Purpose::FetchingBox;
   else
-    CurrentPurpose = Robot::Purpose::ReturningToStart;
+    mCurrentPurpose = Robot::Purpose::ReturningToStart;
 }
 
 
 std::array<Mapping::Direction, 10> Robot::SelectingDestination(bool Contaminated = false)
 {
-  CurrentLocation = CurrentDestination;
+  mCurrentLocation = mCurrentDestination;
 
-  switch (CurrentPurpose)
+  switch (mCurrentPurpose)
   {
   case Robot::Purpose::ReturningToStart:
-    CurrentDestination = Mapping::Node::Start;
+    mCurrentDestination = Mapping::Node::Start;
     break;
 
   case Robot::Purpose::FetchingBox:
-    CurrentDestination = Mapping::Node::Factory1;
+    mCurrentDestination = Mapping::Node::Factory1;
     break;
 
   case Robot::Purpose::CarryingBox:
     if (Contaminated)
-      CurrentDestination = Mapping::Node::ContaminationSite;
+      mCurrentDestination = Mapping::Node::ContaminationSite;
     else
     {
-      CurrentDestination = Mapping::Node(6+BoxDeliveredCount);
-      BoxDeliveredCount += 1;
+      mCurrentDestination = Mapping::Node(6 + mBoxDeliveredCount);
+      mBoxDeliveredCount += 1;
     }
     break;
   }
 
-  return mMapping->FetchRoute(CurrentLocation, CurrentDestination);
+  return mMapping->FetchRoute(mCurrentLocation, mCurrentDestination);
 }
 
 void Robot::Turn(Turning direction)

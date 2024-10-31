@@ -71,6 +71,6 @@ void Motors::SetSpeed(const Location loc, const uint8_t speed)
 
 void Motors::AdjustSpeed(const Location loc, const int speedChange)
 {
-  uint8_t newSpeed = static_cast<uint8_t>(static_cast<int>(mMotorSpeeds[loc]) + speedChange);
-  SetSpeed(loc, newSpeed);
+  const uint8_t NewSpeed = static_cast<uint8_t>(static_cast<int>(mMotorSpeeds[loc]) + speedChange);
+  SetSpeed(loc, NewSpeed);
 }
