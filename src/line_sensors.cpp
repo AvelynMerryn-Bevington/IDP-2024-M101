@@ -19,7 +19,13 @@ LineSensors::LineSensors()
 
 LineSensors::Background LineSensors::Read(Location loc)
 {
-  return digitalRead((pin_size_t)loc+2) ? Background::White : Background::Black;
+  const pin_size_t ReadPins[Location::Count] = {
+    PIN_LEFT_MID_LINE_SENSOR,
+    PIN_RIGHT_MID_LINE_SENSOR,
+    PIN_LEFT_WIDE_LINE_SENSOR,
+    PIN_RIGHT_WIDE_LINE_SENSOR
+  };
+  return digitalRead(ReadPins[loc]) ? Background::White : Background::Black;
 }
 
 

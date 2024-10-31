@@ -15,7 +15,8 @@ public:
     MidLeft,
     MidRight,
     WideLeft,
-    WideRight
+    WideRight,
+    Count
   };
 
   LineSensors();
