@@ -8,18 +8,18 @@
 
 Tof::Tof()
 {
-    Serial.print("TOF Sensor Setup...");
-    Wire.begin();
+  Serial.print("TOF Sensor Setup...");
+  Wire.begin();
  
-    TofSensor.begin(0x50);
-    TofSensor.setMode(TofSensor.eContinuous,TofSensor.eHigh);
-    TofSensor.start();
-    Serial.println("Done!");
+  mTofSensor.begin(0x50);
+  mTofSensor.setMode(mTofSensor.eContinuous, mTofSensor.eHigh);
+  mTofSensor.start();
+  Serial.println("Done!");
 }
 
 void Tof::TofDistance()
 {   
-    float distance = TofSensor.getDistance();
-    Serial.print("TOF Distance: ");
-    Serial.println(distance/10);
+  const float Distance = mTofSensor.getDistance() / 10;
+  Serial.print("TOF Distance: ");
+  Serial.println(Distance);
 }

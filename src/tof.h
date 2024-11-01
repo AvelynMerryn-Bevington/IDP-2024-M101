@@ -4,14 +4,14 @@
 
 #include "DFRobot_VL53L0X.h"
 
-
 class Tof
 {
 public:
-    Tof();
-    void TofDistance();
+  Tof();
+  void TofDistance();
 
 private:
-    DFRobot_VL53L0X TofSensor;
+  DFRobot_VL53L0X mTofSensor;
 };
+
 #endif // TOF_H

@@ -40,18 +40,29 @@ private:
     ReturningToStart
   };
 
-  int RouteCount = 0;
-  int BoxDeliveredCount = 0;
-  bool Junction = false;
-  bool ReadyForTurn = true;
-  bool ContaminatedBox;
-  std::array<Mapping::Direction, 10> Route;
-  Robot::Purpose CurrentPurpose = FetchingBox;
-  Mapping::Node CurrentDestination;
-  Mapping::Node CurrentLocation;
+  const ::std::vector<Mapping::Node> DeliveryBays =
+  {
+    Mapping::Node::Box1Left,
+    Mapping::Node::Box1Right,
+    Mapping::Node::Box2Left,
+    Mapping::Node::Box2Right,
+    Mapping::Node::Box3Left,
+    Mapping::Node::Box3Right,
+    Mapping::Node::Box4Middle
+  };
+  ::std::vector<Mapping::Node> mDeliveredBoxes;
 
+  bool mJunction = false;
+  bool mReadyForTurn = true;
+  bool mContaminatedBox = false;
+  ::std::vector<Mapping::Direction> mRoute;
+  Robot::Purpose mCurrentPurpose = FetchingBox;
+  Mapping::Node mCurrentDestination;
+  Mapping::Node mCurrentLocation;
+
+  Mapping::Node GetNextDeliveryNode();
   void SetInitialSpeed();
-  std::array<Mapping::Direction, 10> Robot::SelectingDestination(bool Contaminated);
+  ::std::vector<Mapping::Direction> Robot::SelectingDestination(bool Contaminated);
 
   Motors *mMotors;
   Leds *mLeds;
