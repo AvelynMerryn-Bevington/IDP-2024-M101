@@ -23,14 +23,14 @@ void Robot::Init()
   while(!mStartButton->Read()){}
 
   Route = mMapping->FetchRoute(Mapping::Node::Start, Mapping::Node::Factory1);
-  //SetInitialSpeed();
+  SetInitialSpeed();
 }
 
 void Robot::Loop()
 {
   mLeds->Loop();
 
-  FollowLine(150, 200);
+  FollowLine();
   
   if (!Junction){
     Junction = CheckForJunction();
@@ -77,13 +77,16 @@ void Robot::Loop()
     case Purpose::FetchingBox:
       while (true){
         FollowLine(100, 150);
-        if (mUltrasonic->BoxCheck())
+        if (mUltrasonic->BoxCheck()){
+          delay(250);
+          mMotors->SetSpeed(Motors::Location::Left, 0);
+          mMotors->SetSpeed(Motors::Location::Right, 0);
           mClaw->Pickup();
           break;
-    
+        }
+      }
     case Purpose::ReturningToStart:
       break;
-    }
   }
   
   CurrentLocation = CurrentDestination;
@@ -102,7 +105,7 @@ void Robot::SetInitialSpeed()
   }
 }
 
-void Robot::FollowLine(const int Slow = 150, const int Fast = 200)
+void Robot::FollowLine(const int Slow, const int Fast)
 {
   bool LeftLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidLeft) == LineSensors::Background::White);
   bool RightLineSensorWhite = (mLineSensors->Read(LineSensors::Location::MidRight) == LineSensors::Background::White);
@@ -171,10 +174,8 @@ void Robot::Turn(Turning direction)
   mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
   mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
 
-  mMotors->SetSpeed(Motors::Location::Left, 200);
+  mMotors->SetSpeed(Motors::Location::Left, 210);
   mMotors->SetSpeed(Motors::Location::Right, 200);
-  
-  delay(500);
 
   LineSensors::Location readLocation1, readLocation2;
   switch (direction)
@@ -196,8 +197,9 @@ void Robot::Turn(Turning direction)
   case Turning::About:
     mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
     mMotors->Run(Motors::Location::Right, Motors::Direction::Backward);
-    readLocation1 = LineSensors::Location::MidRight;
+    readLocation1 = LineSensors::Location::MidLeft;
 
+    delay(250);
     while (mLineSensors->Read(readLocation1) != LineSensors::Background::Black){
       delay(10);
     }
@@ -208,6 +210,7 @@ void Robot::Turn(Turning direction)
     mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
     return;
   }
+  delay(250);
   //Wait for Robot to leave the line and then rejoin the line
   while (mLineSensors->Read(readLocation1) != LineSensors::Background::Black) {
     delay(10);

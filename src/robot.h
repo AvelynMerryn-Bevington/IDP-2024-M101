@@ -28,7 +28,7 @@ public:
   };
 
   void Turn(Turning direction);
-  void FollowLine(int Slow, int Fast);
+  void FollowLine(int Slow = 150, int Fast = 200);
   bool CheckForJunction();
   void ChangingPurpose();
 
