@@ -23,7 +23,7 @@ void Robot::Init()
   while(!mStartButton->Read()){}
 
   Route = mMapping->FetchRoute(Mapping::Node::Start, Mapping::Node::Factory1);
-  SetInitialSpeed();
+  //SetInitialSpeed();
 }
 
 void Robot::Loop()
@@ -204,12 +204,14 @@ void Robot::Turn(Turning direction)
     while (mLineSensors->Read(readLocation1) != LineSensors::Background::White){
       delay(10);
     }
-    break;
+    mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
+    mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
+    return;
   }
+  //Wait for Robot to leave the line and then rejoin the line
   while (mLineSensors->Read(readLocation1) != LineSensors::Background::Black) {
     delay(10);
   }
-
   while (mLineSensors->Read(readLocation1) != LineSensors::Background::White || 
   mLineSensors->Read(readLocation2) != LineSensors::Background::White) {
     delay(10);

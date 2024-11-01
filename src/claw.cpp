@@ -20,12 +20,12 @@ Claw::Claw()
   Serial.flush();
 
   mPinchServo = new Servo();
-  mPinchServo->write(PinchClosed);
+  mPinchServo->write(PinchOpen);
   mPinchServo->attach(PIN_SERVO_CLAW);
   delay(1000);
 
   mLiftServo = new Servo();
-  mLiftServo->write(LiftUp);
+  mLiftServo->write(LiftDown);
   mLiftServo->attach(PIN_SERVO_LIFT);
   delay(1000);
 

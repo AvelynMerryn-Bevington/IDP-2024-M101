@@ -18,16 +18,13 @@ float Ultrasonic::Distance()
     direct_reading = analogRead(PIN_ULTRASONIC_SENSOR);
     distance = direct_reading * ULTRASONIC_SENSOR_MAX_RANGE / ADC_ACCURACY;
 
-    Serial.print(distance,0);
-    Serial.println("cm");
-
     return distance;
 }
 
 bool Ultrasonic::BoxCheck()
 {
     float sum = 0;
-    const int ReadingCount = 20;
+    const int ReadingCount = 100;
     for (int i = 0; i < ReadingCount; i++)
     {
         sum += Distance();
@@ -39,7 +36,8 @@ bool Ultrasonic::BoxCheck()
         Serial.println("ULTRASONIC READING ERROR");
         return false;
     }
+    Serial.println(Average);
 
-    const float CutoffDistance = 100.0;
+    const float CutoffDistance = 1.0;
     return (Average <= CutoffDistance);
 }
