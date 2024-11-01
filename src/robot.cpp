@@ -41,12 +41,7 @@ void Robot::Loop()
   if (mReadyForTurn)
   {
     mReadyForTurn = false;
-  
-    mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
-    mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
-    delay(250);
-    mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
-    mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
+    Serial.println(mRoute[0]);
 
     if(mRoute[0] == Mapping::Direction::Left){
       Turn(Turning::Lefty);
