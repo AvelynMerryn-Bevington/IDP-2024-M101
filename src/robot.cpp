@@ -87,7 +87,7 @@ void Robot::Loop()
   mCurrentLocation = mCurrentDestination;
   Turn(Turning::About);
   ChangingPurpose();
-  mRoute = SelectingDestination(false);
+  mRoute = SelectingDestination(mContaminatedBox);
 }
 
 void Robot::SetInitialSpeed()
@@ -235,3 +235,29 @@ void Robot::Turn(Turning direction)
   mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
   mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
 }
+
+void Robot::ContaminatedDropoff()
+{
+  bool redreached = false;
+  while (redreached == false) {
+    FollowLine(150,200);
+    if (mLineSensors->Read(LineSensors::Location::WideLeft) != LineSensors::Background::Black || mLineSensors->Read(LineSensors::Location::WideRight) != LineSensors::Background::Black) {
+      redreached = true;
+      mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
+      mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
+      delay(500);
+      mClaw->Drop();
+
+      mMotors->Run(Motors::Location::Left, Motors::Direction::Backward);
+      mMotors->Run(Motors::Location::Right, Motors::Direction::Backward);
+      delay(1500);
+
+      Turn(About);
+    }
+  }
+
+
+}
+
+
+
