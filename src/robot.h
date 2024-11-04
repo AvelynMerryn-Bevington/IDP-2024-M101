@@ -31,6 +31,7 @@ public:
   void FollowLine(int Slow = 150, int Fast = 200);
   bool CheckForJunction();
   void ChangingPurpose();
+  void ContaminatedDropoff();
 
 
 private:
