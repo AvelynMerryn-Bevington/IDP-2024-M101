@@ -28,11 +28,10 @@ public:
   };
 
   void Turn(Turning direction);
-  void FollowLine(int Slow = 150, int Fast = 200);
+  void FollowLine(int Slow = 200, int Fast = 250);
   bool CheckForJunction();
   void ChangingPurpose();
   void ContaminatedDropoff();
-
 
 private:
   enum Purpose{
@@ -43,13 +42,13 @@ private:
 
   const ::std::vector<Mapping::Node> DeliveryBays =
   {
+    Mapping::Node::Box4Middle,
     Mapping::Node::Box1Left,
-    Mapping::Node::Box1Right,
-    Mapping::Node::Box2Left,
     Mapping::Node::Box2Right,
     Mapping::Node::Box3Left,
+    Mapping::Node::Box1Right,
     Mapping::Node::Box3Right,
-    Mapping::Node::Box4Middle
+    Mapping::Node::Box2Left // Closest box, other than box 4, to the end.
   };
   ::std::vector<Mapping::Node> mDeliveredBoxes;
 

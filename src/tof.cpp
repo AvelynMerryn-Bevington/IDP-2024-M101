@@ -17,9 +17,28 @@ Tof::Tof()
   Serial.println("Done!");
 }
 
-void Tof::TofDistance()
+float Tof::TofDistance()
 {   
   const float Distance = mTofSensor.getDistance() / 10;
-  Serial.print("TOF Distance: ");
-  Serial.println(Distance);
+  return(Distance);
+}
+
+bool Tof::ContaminationBayDrop()
+{
+    float sum = 0;
+    const int ReadingCount = 20;
+    for (int i = 0; i < ReadingCount; i++)
+    {
+        sum += TofDistance();
+    }
+    const float Average = sum / ReadingCount;
+
+    if (Average < 0.0)
+    {
+        Serial.println("ULTRASONIC READING ERROR");
+        return false;
+    }
+
+    const float CutoffDistance = 9;
+    return (Average <= CutoffDistance);
 }

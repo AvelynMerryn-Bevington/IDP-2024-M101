@@ -10,13 +10,20 @@
   {
   case Node::Start:
   case Node::Factory1:
-  case Node::Box4Middle:
+  case Node::Box2Left:
     return DirectionMap[::std::pair<Node, Node>{StartNode, EndNode}];
 
+  case Node::ContaminationSite:
+    
+
   default:
+    int x = 2;
+    // For Contamination site we don't end at a junction so we don't delete a direction
+    if (StartNode == Mapping::Node::ContaminationSite)
+      x = 1;
     const ::std::vector<Direction> OutwardRoute = DirectionMap[::std::pair<Node, Node>{EndNode, StartNode}];
     ::std::vector<Direction> returnRoute;
-    for (int i = static_cast<int>(OutwardRoute.size() - 1); i >= 0; i++)
+    for (int i = static_cast<int>(OutwardRoute.size() - x); i >= 0; i--)
     {
       if (OutwardRoute[i] == Right)
         returnRoute.push_back(Left);

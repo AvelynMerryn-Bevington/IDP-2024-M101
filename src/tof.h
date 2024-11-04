@@ -8,9 +8,10 @@ class Tof
 {
 public:
   Tof();
-  void TofDistance();
+  bool ContaminationBayDrop();
 
 private:
+  float TofDistance();
   DFRobot_VL53L0X mTofSensor;
 };
 

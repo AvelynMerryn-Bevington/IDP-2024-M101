@@ -33,8 +33,7 @@ bool Ultrasonic::BoxCheck()
         Serial.println("ULTRASONIC READING ERROR");
         return false;
     }
-    Serial.println(Average);
 
-    const float CutoffDistance = 3.0;
+    const float CutoffDistance = 3.5;
     return (Average <= CutoffDistance);
 }

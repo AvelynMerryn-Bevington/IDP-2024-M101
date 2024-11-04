@@ -20,9 +20,14 @@ void Robot::Init()
   mMapping = new Mapping;
   mClaw = new Claw;
 
-  while(!mStartButton->Read()){}
+  while(!mStartButton->Read()){
+  }
 
-  mRoute = mMapping->FetchRoute(Mapping::Node::Start, Mapping::Node::Factory1);
+  mCurrentLocation = Mapping::Node::Start;
+  mCurrentDestination = Mapping::Node::Factory1;
+  mCurrentPurpose = Purpose::FetchingBox;
+  mRoute = mMapping->FetchRoute(mCurrentLocation, mCurrentDestination);
+
   SetInitialSpeed();
 }
 
@@ -64,11 +69,25 @@ void Robot::Loop()
   {
     case Purpose::CarryingBox:
       if (mContaminatedBox){
-        delay(1000);
+        ContaminatedDropoff();
+        break;
       }
+
       mMotors->SetSpeed(Motors::Location::Left, 0);
       mMotors->SetSpeed(Motors::Location::Right, 0);
       mClaw->Drop();
+
+      mMotors->Run(Motors::Location::Left, Motors::Direction::Backward);
+      mMotors->Run(Motors::Location::Right, Motors::Direction::Backward);
+      mMotors->SetSpeed(Motors::Location::Left, 150);
+      mMotors->SetSpeed(Motors::Location::Right, 150);
+      delay(1000);
+  
+      mMotors->SetSpeed(Motors::Location::Left, 0);
+      mMotors->SetSpeed(Motors::Location::Right, 0);
+      mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
+      mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
+      break;
 
     case Purpose::FetchingBox:
       while (true){
@@ -81,6 +100,8 @@ void Robot::Loop()
           break;
         }
       }
+      break;
+
     case Purpose::ReturningToStart:
       break;
   }
@@ -172,8 +193,10 @@ Mapping::Node Robot::GetNextDeliveryNode()
     if (Contaminated)
       mCurrentDestination = Mapping::Node::ContaminationSite;
     else
+    {
       mCurrentDestination = GetNextDeliveryNode();
       mDeliveredBoxes.push_back(mCurrentDestination);
+    }
     break;
   }
 
@@ -185,8 +208,8 @@ void Robot::Turn(Turning direction)
   mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
   mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
 
-  mMotors->SetSpeed(Motors::Location::Left, 210);
-  mMotors->SetSpeed(Motors::Location::Right, 200);
+  mMotors->SetSpeed(Motors::Location::Left, 230);
+  mMotors->SetSpeed(Motors::Location::Right, 230);
 
   LineSensors::Location readLocation1, readLocation2;
   switch (direction)
@@ -209,25 +232,19 @@ void Robot::Turn(Turning direction)
     mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
     mMotors->Run(Motors::Location::Right, Motors::Direction::Backward);
     readLocation1 = LineSensors::Location::MidLeft;
-
-    delay(250);
-    while (mLineSensors->Read(readLocation1) != LineSensors::Background::Black){
-      delay(10);
-    }
-    while (mLineSensors->Read(readLocation1) != LineSensors::Background::White){
-      delay(10);
-    }
-    mMotors->Run(Motors::Location::Left, Motors::Direction::Forward);
-    mMotors->Run(Motors::Location::Right, Motors::Direction::Forward);
-    return;
+    readLocation2 = LineSensors::Location::Count; // Don't use sensor 2
+    break;
   }
+
   delay(250);
   //Wait for Robot to leave the line and then rejoin the line
-  while (mLineSensors->Read(readLocation1) != LineSensors::Background::Black) {
+  while (mLineSensors->Read(readLocation1) != LineSensors::Background::Black)
+  {
     delay(10);
   }
-  while (mLineSensors->Read(readLocation1) != LineSensors::Background::White || 
-  mLineSensors->Read(readLocation2) != LineSensors::Background::White) {
+  while ((readLocation1 != LineSensors::Location::Count && mLineSensors->Read(readLocation1) != LineSensors::Background::White) || 
+         (readLocation2 != LineSensors::Location::Count && mLineSensors->Read(readLocation2) != LineSensors::Background::White))
+  {
     delay(10);
   }
 
@@ -238,9 +255,11 @@ void Robot::Turn(Turning direction)
 void Robot::ContaminatedDropoff()
 {
   bool redreached = false;
-  while (redreached == false) {
+  while (redreached == false)
+  {
     FollowLine(150,200);
-    if (mLineSensors->Read(LineSensors::Location::WideLeft) != LineSensors::Background::Black || mLineSensors->Read(LineSensors::Location::WideRight) != LineSensors::Background::Black) {
+    if (mTof->ContaminationBayDrop())
+    {
       redreached = true;
       mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
       mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
@@ -249,9 +268,7 @@ void Robot::ContaminatedDropoff()
 
       mMotors->Run(Motors::Location::Left, Motors::Direction::Backward);
       mMotors->Run(Motors::Location::Right, Motors::Direction::Backward);
-      delay(1500);
-
-      Turn(About);
+      delay(1000);
     }
   }
 

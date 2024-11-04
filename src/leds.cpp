@@ -48,6 +48,9 @@ void Leds::SetCarrying(bool carrying, bool contaminated)
 
 void Leds::SetMoving(bool moving)
 {
+  if (mMoving == moving)
+    return;
+
   mMoving = moving;
   mMovingOn = moving;
   mMovingFlashMillis = millis() + 500;
