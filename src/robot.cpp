@@ -63,8 +63,9 @@ void Robot::Loop()
   switch(mCurrentPurpose)
   {
     case Purpose::CarryingBox:
-      if (mContaminatedBox)
+      if (mContaminatedBox){
         delay(1000);
+      }
       mMotors->SetSpeed(Motors::Location::Left, 0);
       mMotors->SetSpeed(Motors::Location::Right, 0);
       mClaw->Drop();
@@ -87,7 +88,7 @@ void Robot::Loop()
   mCurrentLocation = mCurrentDestination;
   Turn(Turning::About);
   ChangingPurpose();
-  mRoute = SelectingDestination(false);
+  mRoute = SelectingDestination(mContaminatedBox);
 }
 
 void Robot::SetInitialSpeed()
@@ -157,8 +158,6 @@ Mapping::Node Robot::GetNextDeliveryNode()
 
 ::std::vector<Mapping::Direction> Robot::SelectingDestination(bool Contaminated = false)
 {
-  mCurrentLocation = mCurrentDestination;
-
   switch (mCurrentPurpose)
   {
   case Robot::Purpose::ReturningToStart:
