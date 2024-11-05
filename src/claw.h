@@ -16,6 +16,7 @@ public:
   Claw();
   void Drop();
   bool Pickup();
+  void PushPosition();
 
 private:
   Servo *mPinchServo;
@@ -25,6 +26,7 @@ private:
   int PinchClosed = 62;
   int LiftUp = 130;
   int LiftDown = 105;
+  int pushpos = LiftDown + 10;
 };
 
 #endif CLAW_H
