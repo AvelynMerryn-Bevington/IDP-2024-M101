@@ -8,18 +8,37 @@
 
 Tof::Tof()
 {
-    Serial.print("TOF Sensor Setup...");
-    Wire.begin();
+  Serial.print("TOF Sensor Setup...");
+  Wire.begin();
  
-    TofSensor.begin(0x50);
-    TofSensor.setMode(TofSensor.eContinuous,TofSensor.eHigh);
-    TofSensor.start();
-    Serial.println("Done!");
+  mTofSensor.begin(0x50);
+  mTofSensor.setMode(mTofSensor.eContinuous, mTofSensor.eHigh);
+  mTofSensor.start();
+  Serial.println("Done!");
 }
 
-void Tof::TofDistance()
+float Tof::TofDistance()
 {   
-    float distance = TofSensor.getDistance();
-    Serial.print("TOF Distance: ");
-    Serial.println(distance/10);
+  const float Distance = mTofSensor.getDistance() / 10;
+  return(Distance);
+}
+
+bool Tof::ContaminationBayDrop()
+{
+  float sum = 0;
+  const int ReadingCount = 20;
+  for (int i = 0; i < ReadingCount; i++)
+  {
+    sum += TofDistance();
+  }
+  const float Average = sum / ReadingCount;
+
+  if (Average < 0.0)
+  {
+    Serial.println("ULTRASONIC READING ERROR");
+    return false;
+  }
+
+  const float CutoffDistance = 9;
+  return (Average <= CutoffDistance);
 }

@@ -65,12 +65,14 @@ void Motors::SetSpeed(const Location loc, const uint8_t speed)
 {
   Adafruit_DCMotor *motor = GetMotor(loc);
 
-  mMotorSpeeds[loc] = speed;
-  motor->setSpeed(speed);
-}
+  double adjustedSpeedDbl = (double)speed;
+  if (loc == Left)
+    adjustedSpeedDbl *= LeftWheelCalibrationFactor;
 
-void Motors::AdjustSpeed(const Location loc, const int speedChange)
-{
-  uint8_t newSpeed = static_cast<uint8_t>(static_cast<int>(mMotorSpeeds[loc]) + speedChange);
-  SetSpeed(loc, newSpeed);
+  uint8_t adjustedSpeed = (uint8_t)adjustedSpeedDbl;
+  if (adjustedSpeedDbl > 255.0)
+    adjustedSpeed = 255;
+
+  mMotorSpeeds[loc] = adjustedSpeed;
+  motor->setSpeed(adjustedSpeed);
 }

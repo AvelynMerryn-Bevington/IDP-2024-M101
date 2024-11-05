@@ -20,38 +20,43 @@ Claw::Claw()
   Serial.flush();
 
   mPinchServo = new Servo();
+  mPinchServo->write(PinchOpen);
   mPinchServo->attach(PIN_SERVO_CLAW);
+  delay(1000);
+
   mLiftServo = new Servo();
-  mPinchServo->attach(PIN_SERVO_LIFT);
-  Drop();
+  mLiftServo->write(LiftDown);
+  mLiftServo->attach(PIN_SERVO_LIFT);
+  delay(1000);
 }
 
 void Claw::Drop()
 {
+  // Lower box to the ground
+  mLiftServo->write(LiftDown);
   delay(1000);
 
-  // Lower box to the ground
-  mLiftServo->write(40); 
-  delay(2000);
-
   // Release box
-  mPinchServo->write(180);
-  delay(3000);
+  mPinchServo->write(PinchOpen);
+  delay(1000);
 
   mLeds->SetCarrying(false, false);
 }
 
 bool Claw::Pickup()
-{
-  delay(1000);
-  
+{  
   // Grab box
-  mPinchServo->write(140);
-  delay(3000);
+  mPinchServo->write(PinchClosed);
+  delay(1000);
 
   // Lift box off the ground
-  mLiftServo->write(0);
-  delay(2000);
+  mLiftServo->write(LiftUp);
+  for (int pos = LiftDown; pos <= LiftUp; pos++)
+  {
+    mLiftServo->write(pos);
+    delay(15);
+  }
+  delay(1000);
 
   bool contaminated = (digitalRead(PIN_MAGNETIC_SENSOR) == HIGH);
   mLeds->SetCarrying(true, contaminated);

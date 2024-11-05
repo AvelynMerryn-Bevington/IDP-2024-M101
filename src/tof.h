@@ -4,14 +4,15 @@
 
 #include "DFRobot_VL53L0X.h"
 
-
 class Tof
 {
 public:
-    Tof();
-    void TofDistance();
+  Tof();
+  bool ContaminationBayDrop();
 
 private:
-    DFRobot_VL53L0X TofSensor;
+  float TofDistance();
+  DFRobot_VL53L0X mTofSensor;
 };
+
 #endif // TOF_H

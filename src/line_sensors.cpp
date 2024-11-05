@@ -19,7 +19,8 @@ LineSensors::LineSensors()
 
 LineSensors::Background LineSensors::Read(Location loc)
 {
-  const pin_size_t ReadPins[Location::Count] = {
+  const pin_size_t ReadPins[Location::Count] =
+  {
     PIN_LEFT_MID_LINE_SENSOR,
     PIN_RIGHT_MID_LINE_SENSOR,
     PIN_LEFT_WIDE_LINE_SENSOR,
