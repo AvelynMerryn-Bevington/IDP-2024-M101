@@ -33,10 +33,9 @@ void Robot::Init()
 
 void Robot::Loop()
 {
-  mLeds->Loop();
-
   FollowLine();
-  
+  mLeds->BlueLight();
+
   if (!mJunction)
   {
     mJunction = CheckForJunction();
@@ -92,6 +91,7 @@ void Robot::Loop()
     case Purpose::FetchingBox:
       while (true){
         FollowLine(100, 150);
+        mLeds->BlueLight();
         if (mUltrasonic->BoxCheck()){
           delay(250);
           mMotors->SetSpeed(Motors::Location::Left, 0);
@@ -208,8 +208,8 @@ void Robot::Turn(Turning direction)
   mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
   mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
 
-  mMotors->SetSpeed(Motors::Location::Left, 200);
-  mMotors->SetSpeed(Motors::Location::Right, 200);
+  mMotors->SetSpeed(Motors::Location::Left, 180);
+  mMotors->SetSpeed(Motors::Location::Right, 180);
 
   LineSensors::Location readLocation1, readLocation2;
   switch (direction)
@@ -235,16 +235,18 @@ void Robot::Turn(Turning direction)
     readLocation2 = LineSensors::Location::Count; // Don't use sensor 2
     break;
   }
+  //Wait for Robot to leave the line and then rejoin the line
 
   delay(250);
-  //Wait for Robot to leave the line and then rejoin the line
   while (mLineSensors->Read(readLocation1) != LineSensors::Background::Black)
   {
+    mLeds->BlueLight();
     delay(10);
   }
   while ((readLocation1 != LineSensors::Location::Count && mLineSensors->Read(readLocation1) != LineSensors::Background::White) || 
          (readLocation2 != LineSensors::Location::Count && mLineSensors->Read(readLocation2) != LineSensors::Background::White))
   {
+    mLeds->BlueLight();
     delay(10);
   }
 
@@ -257,7 +259,8 @@ void Robot::ContaminatedDropoff()
   bool redreached = false;
   while (redreached == false)
   {
-    FollowLine(150,200);
+    FollowLine(180,200);
+    mLeds->BlueLight();
     if (mTof->ContaminationBayDrop())
     {
       redreached = true;
@@ -268,7 +271,12 @@ void Robot::ContaminatedDropoff()
 
       mMotors->Run(Motors::Location::Left, Motors::Direction::Backward);
       mMotors->Run(Motors::Location::Right, Motors::Direction::Backward);
-      delay(1000);
+      
+      unsigned long StartTime = millis();
+      while (millis() <= StartTime + 500){
+        FollowLine(150, 200);
+        mLeds->BlueLight();
+      }
     }
   }
 

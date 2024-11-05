@@ -14,25 +14,11 @@ Leds::Leds()
   pinMode(PIN_NO_CONTAMINATION_LED, OUTPUT);
   pinMode(PIN_DRIVING_STATUS_LED, OUTPUT);
   
-  mMoving = false;
-  mMovingOn = false;
-  mMovingFlashMillis = 0;
+  BlueInit = true;
+  BlueOn = false;
 
   Serial.println("Done!");
   Serial.flush();
-}
-
-void Leds::Loop()
-{
-  if (!mMoving)
-    return;
-
-  if (mMovingFlashMillis > millis())
-    return;
-
-  mMovingFlashMillis = millis() + 500;
-  mMovingOn = !mMovingOn;
-  Set(PIN_DRIVING_STATUS_LED, mMovingOn);
 }
 
 void Leds::Set(int Led, bool isOn)
@@ -46,13 +32,33 @@ void Leds::SetCarrying(bool carrying, bool contaminated)
   Set(PIN_NO_CONTAMINATION_LED, carrying && !contaminated);
 }
 
-void Leds::SetMoving(bool moving)
+void Leds::BlueLight()
 {
-  if (mMoving == moving)
-    return;
+  unsigned long time2;
 
-  mMoving = moving;
-  mMovingOn = moving;
-  mMovingFlashMillis = millis() + 500;
-  Set(PIN_DRIVING_STATUS_LED, moving);
+  if (BlueInit == true) {
+    time1 = millis();
+  }
+
+  time2 = millis();
+  Serial.println(time2);
+  Serial.println(time1);
+
+  if (time2 >= time1 + 450) {
+    if (BlueOn == true) {
+      Set(PIN_DRIVING_STATUS_LED, false);
+      BlueOn = false; 
+    } else {
+      Set(PIN_DRIVING_STATUS_LED, true);
+      BlueOn = true;
+    }
+    time1 = time2; 
+  }
+  BlueInit = false;
+}
+
+void Leds::TurnOffBlueLight()
+{
+  BlueOn = false;
+  Set(PIN_DRIVING_STATUS_LED, false);
 }
