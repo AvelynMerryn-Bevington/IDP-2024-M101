@@ -42,6 +42,13 @@ void Motors::Run(const Location loc, const Direction direction)
 {
   Adafruit_DCMotor *motor = GetMotor(loc);
 
+  if (loc == Location::Right){
+    RightWheelDirection = Direction(direction);
+  }
+  else {
+    LeftWheelDirection = Direction(direction);
+  }
+
   switch (direction)
   {
   case Forward:
@@ -66,8 +73,11 @@ void Motors::SetSpeed(const Location loc, const uint8_t speed)
   Adafruit_DCMotor *motor = GetMotor(loc);
 
   double adjustedSpeedDbl = (double)speed;
-  if (loc == Left)
-    adjustedSpeedDbl *= LeftWheelCalibrationFactor;
+  if (loc == Left && LeftWheelDirection == Forward)
+    adjustedSpeedDbl *= LeftWheelForwardCalibrationFactor;
+  
+  else if (loc == Left && LeftWheelDirection == Backward);
+    adjustedSpeedDbl *= LeftWheelBackwardCalibrationFactor;
 
   uint8_t adjustedSpeed = (uint8_t)adjustedSpeedDbl;
   if (adjustedSpeedDbl > 255.0)
