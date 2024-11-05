@@ -38,7 +38,8 @@ bool Tof::ContaminationBayDrop()
         Serial.println("ULTRASONIC READING ERROR");
         return false;
     }
+    Serial.println(Average);
 
-    const float CutoffDistance = 9;
+    const float CutoffDistance = 6;
     return (Average <= CutoffDistance);
 }
