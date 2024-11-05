@@ -29,7 +29,7 @@ Claw::Claw()
   mLiftServo->attach(PIN_SERVO_LIFT);
   delay(1000);
 
-  //Pickup();
+  //Pickup()
 }
 
 void Claw::Drop()
