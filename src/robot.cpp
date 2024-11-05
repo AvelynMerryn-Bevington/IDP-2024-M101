@@ -208,8 +208,8 @@ void Robot::Turn(Turning direction)
   mMotors->Run(Motors::Location::Left, Motors::Direction::Stopped);
   mMotors->Run(Motors::Location::Right, Motors::Direction::Stopped);
 
-  mMotors->SetSpeed(Motors::Location::Left, 150);
-  mMotors->SetSpeed(Motors::Location::Right, 150);
+  mMotors->SetSpeed(Motors::Location::Left, 200);
+  mMotors->SetSpeed(Motors::Location::Right, 200);
 
   LineSensors::Location readLocation1, readLocation2;
   switch (direction)

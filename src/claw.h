@@ -23,8 +23,8 @@ private:
   Leds *mLeds;
   int PinchOpen = 20;
   int PinchClosed = 62;
-  int LiftUp = 130;
-  int LiftDown = 105;
+  int LiftUp = 140;
+  int LiftDown = 120;
 };
 
 #endif CLAW_H
