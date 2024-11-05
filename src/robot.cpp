@@ -12,7 +12,6 @@ void Robot::Init()
 
   mLeds = new Leds;
   mMotors = new Motors(mLeds);
-  mImu = new Imu;
   mLineSensors = new LineSensors;
   mUltrasonic = new Ultrasonic;
   mTof = new Tof;
@@ -20,8 +19,7 @@ void Robot::Init()
   mMapping = new Mapping;
   mClaw = new Claw;
 
-  while(!mStartButton->Read()){
-  }
+  while(!mStartButton->Read()){}
 
   mCurrentLocation = Mapping::Node::Start;
   mCurrentDestination = Mapping::Node::Factory1;
@@ -48,10 +46,12 @@ void Robot::Loop()
     mReadyForTurn = false;
     Serial.println(mRoute[0]);
 
-    if(mRoute[0] == Mapping::Direction::Left){
+    if(mRoute[0] == Mapping::Direction::Left)
+    {
       Turn(Turning::Lefty);
     } 
-    else if(mRoute[0] == Mapping::Direction::Right){
+    else if(mRoute[0] == Mapping::Direction::Right)
+    {
       Turn(Turning::Righty);
     }
   }
@@ -68,7 +68,8 @@ void Robot::Loop()
   switch(mCurrentPurpose)
   {
     case Purpose::CarryingBox:
-      if (mContaminatedBox){
+      if (mContaminatedBox)
+      {
         ContaminatedDropoff();
         break;
       }
@@ -90,9 +91,11 @@ void Robot::Loop()
       break;
 
     case Purpose::FetchingBox:
-      while (true){
+      while (true)
+      {
         FollowLine(100, 150);
-        if (mUltrasonic->BoxCheck()){
+        if (mUltrasonic->BoxCheck())
+        {
           delay(250);
           mMotors->SetSpeed(Motors::Location::Left, 0);
           mMotors->SetSpeed(Motors::Location::Right, 0);
@@ -271,9 +274,4 @@ void Robot::ContaminatedDropoff()
       delay(1000);
     }
   }
-
-
 }
-
-
-

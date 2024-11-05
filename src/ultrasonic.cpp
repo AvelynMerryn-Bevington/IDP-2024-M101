@@ -20,20 +20,20 @@ float Ultrasonic::Distance()
 
 bool Ultrasonic::BoxCheck()
 {
-    float sum = 0;
-    const int ReadingCount = 100;
-    for (int i = 0; i < ReadingCount; i++)
-    {
-        sum += Distance();
-    }
-    const float Average = sum / ReadingCount;
+  float sum = 0;
+  const int ReadingCount = 100;
+  for (int i = 0; i < ReadingCount; i++)
+  {
+    sum += Distance();
+  }
+  const float Average = sum / ReadingCount;
 
-    if (Average < 0.0)
-    {
-        Serial.println("ULTRASONIC READING ERROR");
-        return false;
-    }
+  if (Average < 0.0)
+  {
+    Serial.println("ULTRASONIC READING ERROR");
+    return false;
+  }
 
-    const float CutoffDistance = 3.5;
-    return (Average <= CutoffDistance);
+  const float CutoffDistance = 3.5;
+  return (Average <= CutoffDistance);
 }
