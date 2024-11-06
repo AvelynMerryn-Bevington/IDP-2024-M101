@@ -25,19 +25,19 @@ float Tof::TofDistance()
 
 bool Tof::ContaminationBayDrop()
 {
-    float sum = 0;
-    const int ReadingCount = 20;
-    for (int i = 0; i < ReadingCount; i++)
-    {
-        sum += TofDistance();
-    }
-    const float Average = sum / ReadingCount;
+  float sum = 0;
+  const int ReadingCount = 20;
+  for (int i = 0; i < ReadingCount; i++)
+  {
+    sum += TofDistance();
+  }
+  const float Average = sum / ReadingCount;
 
-    if (Average < 0.0)
-    {
-        Serial.println("ULTRASONIC READING ERROR");
-        return false;
-    }
+  if (Average < 0.0)
+  {
+    Serial.println("ULTRASONIC READING ERROR");
+    return false;
+  }
 
     const float CutoffDistance = 8;
     return (Average <= CutoffDistance);

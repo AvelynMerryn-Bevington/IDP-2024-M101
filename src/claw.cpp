@@ -28,8 +28,6 @@ Claw::Claw()
   mLiftServo->write(LiftDown);
   mLiftServo->attach(PIN_SERVO_LIFT);
   delay(1000);
-
-  //Pickup()
 }
 
 void Claw::Drop()
@@ -57,7 +55,8 @@ bool Claw::Pickup()
 
   // Lift box off the ground
   mLiftServo->write(LiftUp);
-  for (int pos = LiftDown; pos <= LiftUp; pos += 1) {
+  for (int pos = LiftDown; pos <= LiftUp; pos++)
+  {
     mLiftServo->write(pos);
     delay(15);
   }
