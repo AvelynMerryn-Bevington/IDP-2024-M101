@@ -26,7 +26,7 @@ float Tof::TofDistance()
 bool Tof::ContaminationBayDrop()
 {
     float sum = 0;
-    const int ReadingCount = 50;
+    const int ReadingCount = 20;
     for (int i = 0; i < ReadingCount; i++)
     {
         sum += TofDistance();

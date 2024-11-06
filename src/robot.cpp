@@ -259,7 +259,7 @@ void Robot::ContaminatedDropoff()
   bool redreached = false;
   while (redreached == false)
   {
-    FollowLine(180,200);
+    FollowLine(150,200);
     mLeds->BlueLight();
     if (mTof->ContaminationBayDrop())
     {

@@ -22,9 +22,9 @@ private:
   Servo *mLiftServo;
   Leds *mLeds;
   int PinchOpen = 20;
-  int PinchClosed = 65;
-  int LiftUp = 130;
-  int LiftDown = 120;
+  int PinchClosed = 68;
+  int LiftUp = 135;
+  int LiftDown = 125;
 };
 
 #endif CLAW_H

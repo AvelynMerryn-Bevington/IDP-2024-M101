@@ -42,13 +42,12 @@ private:
 
   const ::std::vector<Mapping::Node> DeliveryBays =
   {
-    Mapping::Node::Box4Middle,
     Mapping::Node::Box1Left,
     Mapping::Node::Box2Right,
-    Mapping::Node::Box3Left,
+    Mapping::Node::Box4Middle,
     Mapping::Node::Box1Right,
-    Mapping::Node::Box3Right,
-    Mapping::Node::Box2Left // Closest box, other than box 4, to the end.
+    Mapping::Node::Box4Middle,
+    Mapping::Node::Box2Left, // Closest box, other than box 4, to the end.
   };
   ::std::vector<Mapping::Node> mDeliveredBoxes;
 
