@@ -4,7 +4,6 @@
 #include "motors.h"
 #include "leds.h"
 #include "claw.h"
-#include "imu.h"
 #include "line_sensors.h"
 #include "ultrasonic.h"
 #include "tof.h"
@@ -27,13 +26,13 @@ public:
     Righty1
   };
 
+private:
   void Turn(Turning direction);
   void FollowLine(int Slow = 175, int Fast = 225);
   bool CheckForJunction();
   void ChangingPurpose();
   void ContaminatedDropoff();
 
-private:
   enum Purpose{
     CarryingBox,
     FetchingBox,
@@ -66,7 +65,6 @@ private:
 
   Motors *mMotors;
   Leds *mLeds;
-  Imu *mImu;
   LineSensors *mLineSensors;
   Ultrasonic *mUltrasonic;
   Tof *mTof;

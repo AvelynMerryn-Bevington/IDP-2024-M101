@@ -17,13 +17,15 @@
     
 
   default:
-    int x = 2;
-    // For Contamination site we don't end at a junction so we don't delete a direction
-    if (StartNode == Mapping::Node::ContaminationSite)
-      x = 1;
     const ::std::vector<Direction> OutwardRoute = DirectionMap[::std::pair<Node, Node>{EndNode, StartNode}];
     ::std::vector<Direction> returnRoute;
-    for (int i = static_cast<int>(OutwardRoute.size() - x); i >= 0; i--)
+
+    // For the contamination site, don't ignore the first direction
+    if (StartNode == Mapping::Node::ContaminationSite)
+      returnRoute.push_back(OutwardRoute[OutwardRoute.size() - 1]);
+
+    // size() - 2 ignores the first direction
+    for (int i = static_cast<int>(OutwardRoute.size() - 2); i >= 0; i--)
     {
       if (OutwardRoute[i] == Right)
         returnRoute.push_back(Left);
