@@ -18,6 +18,8 @@ Leds::Leds()
   mMovingOn = false;
   mMovingFlashMillis = 0;
 
+  BlueInit = true;
+
   Serial.println("Done!");
   Serial.flush();
 }
@@ -55,4 +57,32 @@ void Leds::SetMoving(bool moving)
   mMovingOn = moving;
   mMovingFlashMillis = millis() + 500;
   Set(PIN_DRIVING_STATUS_LED, moving);
+}
+
+
+void Leds::BlueLight()
+{
+  unsigned long time2;
+
+  if (BlueInit == true) {
+    time1 = millis();
+  }
+  
+
+  time2 = millis();
+  Serial.println(time2);
+  Serial.println(time1);
+
+  if (time2 >= time1 + 450) {
+    if (BlueOn == true) {
+      Set(PIN_DRIVING_STATUS_LED, false);
+      BlueOn = false; 
+    } else {
+      Set(PIN_DRIVING_STATUS_LED, true);
+      BlueOn = true;
+    }
+    time1 = time2; 
+  }
+  BlueInit = false;
+
 }

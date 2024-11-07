@@ -8,6 +8,8 @@ public:
   void Loop();
   void SetCarrying(bool carrying, bool contaminated);
   void SetMoving(bool moving);
+  void BlueLight();
+
 
 private:
   void Set(int Led, bool isOn);
@@ -15,6 +17,10 @@ private:
   bool mMoving;
   bool mMovingOn;
   unsigned long mMovingFlashMillis;
+  
+  bool BlueOn;
+  bool BlueInit;
+  unsigned long time1;
 };
 
 #endif // LEDS_H

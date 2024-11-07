@@ -28,11 +28,17 @@ void Robot::Init()
   mCurrentPurpose = Purpose::FetchingBox;
   mRoute = mMapping->FetchRoute(mCurrentLocation, mCurrentDestination);
 
-  SetInitialSpeed();
+  //SetInitialSpeed();
+
 }
 
 void Robot::Loop()
 {
+  Serial.println("Loop");
+  
+  mLeds->BlueLight();
+  
+  /*
   mLeds->Loop();
 
   FollowLine();
@@ -110,6 +116,8 @@ void Robot::Loop()
   Turn(Turning::About);
   ChangingPurpose();
   mRoute = SelectingDestination(mContaminatedBox);
+
+  */
 }
 
 void Robot::SetInitialSpeed()

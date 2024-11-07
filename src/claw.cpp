@@ -67,8 +67,8 @@ bool Claw::Pickup()
 
 void Claw::PushPosition()
 {
-  mLiftServo->write(LiftUp);
-  for (int pos = LiftDown; pos <= LiftUp; pos += 1) {
+  
+  for (int pos = LiftUp; pos >= pushpos; pos -= 1) {
     mLiftServo->write(pos);
     delay(15);
   }
