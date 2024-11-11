@@ -32,7 +32,7 @@ private:
   Adafruit_DCMotor* GetMotor(Location loc);
   uint8_t mMotorSpeeds[Location::Count];
 
-  const double LeftWheelCalibrationFactor = 1.05;
+  const double LeftWheelCalibrationFactor = 0.98;
 
   LineSensors *mLineSensors;
   Leds *mLeds;

@@ -46,17 +46,14 @@ void Motors::Run(const Location loc, const Direction direction)
   {
   case Forward:
     motor->run(FORWARD);
-    mLeds->SetMoving(true);
     break;
 
   case Backward:
     motor->run(BACKWARD);
-    mLeds->SetMoving(true);
     break;
 
   case Stopped:
     motor->run(RELEASE);
-    mLeds->SetMoving(false);
     break;
   }
 }

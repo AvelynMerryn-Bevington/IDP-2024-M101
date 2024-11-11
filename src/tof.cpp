@@ -39,6 +39,6 @@ bool Tof::ContaminationBayDrop()
     return false;
   }
 
-  const float CutoffDistance = 9;
-  return (Average <= CutoffDistance);
+    const float CutoffDistance = 8;
+    return (Average <= CutoffDistance);
 }

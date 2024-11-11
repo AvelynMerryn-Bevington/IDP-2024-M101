@@ -32,6 +32,8 @@ Claw::Claw()
 
 void Claw::Drop()
 {
+  mLeds->TurnOffBlueLight();
+
   // Lower box to the ground
   mLiftServo->write(LiftDown);
   delay(1000);
@@ -44,7 +46,9 @@ void Claw::Drop()
 }
 
 bool Claw::Pickup()
-{  
+{
+  mLeds->TurnOffBlueLight();
+  
   // Grab box
   mPinchServo->write(PinchClosed);
   delay(1000);
