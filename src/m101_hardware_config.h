@@ -16,7 +16,6 @@
 #define PIN_SERVO_CLAW 9
 #define PIN_SERVO_LIFT 10
 #define PIN_MAGNETIC_SENSOR 11
-#define PIN_TOUCH_SENSOR 12
 
 
 #define MOTOR_LEFT 2
